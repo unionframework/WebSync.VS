@@ -1,19 +1,24 @@
 using RoslynSpike.SessionWeb.Models;
+using System;
 using System.Collections.Generic;
 
 namespace RoslynSpike.Ember.DTO
 {
-    public class ComponentDto : EmberDtoBase
+    public class ComponentDto : DtoBase
     {
         public string componentType { get; }
         public string name { get; }
         public object rootSelector { get; }
         public IEnumerable<string> constructorParams { get; }
+        public int fieldIndex;
+        public string fieldName;
 
-        public ComponentDto(IComponentInstance component) : base(component.Id) {
+        public ComponentDto(IComponentInstance component) : base(component.Id)
+        {
             componentType = component.ComponentType;
             name = component.Name;
-            if (component.RootSelector != null) {
+            if (component.RootSelector != null)
+            {
                 // TODO(**): save scss value even if we can't parse it
                 rootSelector = new
                 {

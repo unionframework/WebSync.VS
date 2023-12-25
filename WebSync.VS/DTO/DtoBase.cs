@@ -1,8 +1,8 @@
 namespace RoslynSpike.Ember.DTO {
-    public class EmberDtoBase {
+    public class DtoBase {
         public string id { get; set; }
 
-        public EmberDtoBase(string id) {
+        public DtoBase(string id) {
             this.id = id;
         }
     }

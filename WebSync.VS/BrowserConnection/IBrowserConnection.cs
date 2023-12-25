@@ -15,12 +15,12 @@ namespace RoslynSpike.BrowserConnection
         void Connect();
         void Close();
         bool Connected { get; }
-        event EventHandler<IEnumerable<ISessionWeb>> SessionWebReceived;
+        event EventHandler<IEnumerable<IWebInfo>> SessionWebReceived;
         event EventHandler SessionWebRequested;
         event EventHandler<string> SelectorToConvertReceived;
         event EventHandler<string> UrlToMatchReceived;
         void SendSelector(Selector selector);
-        void SendSessionWeb(IEnumerable<ISessionWeb> webs);
+        void SendSessionWeb(IEnumerable<IWebInfo> webs);
         void SendUrlMatchResult(MatchUrlResult matchUrlResult);
     }
 }

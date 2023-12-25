@@ -16,19 +16,19 @@ using RoslynSpike.Utilities.Extensions;
 
 namespace RoslynSpike.SessionWeb
 {
-    public class RoslynSessionWebProvider:ISessionWebPovider
+    public class RoslynWebInfoProvider:ISessionWebPovider
     {
         private readonly VisualStudioWorkspace _workspace;
-        private IEnumerable<ISessionWeb> _cachedSessionWebs;
+        private IEnumerable<IWebInfo> _cachedSessionWebs;
 
-        public RoslynSessionWebProvider(VisualStudioWorkspace workspace)
+        public RoslynWebInfoProvider(VisualStudioWorkspace workspace)
         {
             _workspace = workspace;
         }
 
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public async Task<IEnumerable<ISessionWeb>> GetSessionWebsAsync(bool useCache) {
+        public async Task<IEnumerable<IWebInfo>> GetSessionWebsAsync(bool useCache) {
             if (_cachedSessionWebs == null || !useCache) {
                 try {
                     var solution = _workspace.CurrentSolution;
@@ -38,10 +38,10 @@ namespace RoslynSpike.SessionWeb
                     var components = await GetComponentsAsync(solution);
 
                     // . for now, we unable to extract sessions, so everything is store in one session
-                    var sessionWeb = new RoslynSessionWeb(services, components, pages);
-                    var sessionWebs = new List<ISessionWeb> {sessionWeb};
-                    CacheSesionWebs(sessionWebs);
-                    return sessionWebs;
+                    var roslynWebInfo = new RoslynWebInfo(services, components, pages);
+                    var webInfoList = new List<IWebInfo> {roslynWebInfo};
+                    CacheWebInfo(webInfoList);
+                    return webInfoList;
                 }
                 catch (Exception ex) {
                     _log.Error(ex, "Unable to collect selenium contexts");
@@ -51,7 +51,7 @@ namespace RoslynSpike.SessionWeb
             return _cachedSessionWebs;
         }
 
-        public async Task<bool> UpdateSessionWebsAsync(ISessionWeb sessionWeb, DocumentId changedDocumentId)
+        public async Task<bool> UpdateSessionWebsAsync(IWebInfo webInfo, DocumentId changedDocumentId)
         {
             try
             {
@@ -81,11 +81,11 @@ namespace RoslynSpike.SessionWeb
             }
         }
 
-        private void CacheSesionWebs(List<ISessionWeb> sessionWebs) {
+        private void CacheWebInfo(List<IWebInfo> sessionWebs) {
             _cachedSessionWebs = sessionWebs;
         }
 
-        private IEnumerable<ISessionWeb> UpdateCachedSessionWebs(IEnumerable<RoslynPageType> pageTypes, IEnumerable<RoslynComponentType> componentTypes) {
+        private IEnumerable<IWebInfo> UpdateCachedSessionWebs(IEnumerable<RoslynPageType> pageTypes, IEnumerable<RoslynComponentType> componentTypes) {
             // TODO: For now we have only one
             var sessionWeb = _cachedSessionWebs.First();
 

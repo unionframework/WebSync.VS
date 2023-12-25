@@ -4,9 +4,9 @@ using RoslynSpike.SessionWeb.Models;
 
 namespace RoslynSpike.SessionWeb.RoslynModels
 {
-    public class RoslynSessionWeb : ISessionWeb
+    public class RoslynWebInfo : IWebInfo
     {
-        public RoslynSessionWeb(IEnumerable<RoslynService> services, IEnumerable<RoslynComponentType> componentTypes,
+        public RoslynWebInfo(IEnumerable<RoslynService> services, IEnumerable<RoslynComponentType> componentTypes,
             IEnumerable<RoslynPageType> pageTypes)
         {
             Services = services.ToDictionary(s => s.Id, s => (IService) s);
@@ -20,7 +20,7 @@ namespace RoslynSpike.SessionWeb.RoslynModels
 
         public override bool Equals(object obj)
         {
-            if (!(obj is RoslynSessionWeb sessionWeb2))
+            if (!(obj is RoslynWebInfo sessionWeb2))
             {
                 return false;
             }

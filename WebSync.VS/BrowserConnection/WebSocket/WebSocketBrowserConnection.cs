@@ -21,7 +21,7 @@ namespace RoslynSpike.BrowserConnection.WebSocket
         private readonly string _path;
 
         public event EventHandler SessionWebRequested;
-        public event EventHandler<IEnumerable<ISessionWeb>> SessionWebReceived;
+        public event EventHandler<IEnumerable<IWebInfo>> SessionWebReceived;
         public event EventHandler<string> UrlToMatchReceived;
         public event EventHandler<string> SelectorToConvertReceived;
         public event EventHandler<SIMessage> Broadcasted;
@@ -85,11 +85,11 @@ namespace RoslynSpike.BrowserConnection.WebSocket
 
         private void OnSelectorToConvertReceived(string selector) => SelectorToConvertReceived?.Invoke(this, selector);
 
-        private void OnSessionWebReceived(IEnumerable<ISessionWeb> sessionWebs) => SessionWebReceived?.Invoke(this, sessionWebs);
+        private void OnSessionWebReceived(IEnumerable<IWebInfo> sessionWebs) => SessionWebReceived?.Invoke(this, sessionWebs);
 
         public void SendSelector(Selector selector) => OnBroadcasted(SIMessage.CreateConvertedSelectorData(JsonConvert.SerializeObject(selector)));
 
-        public void SendSessionWeb(IEnumerable<ISessionWeb> webs) => OnBroadcasted(SIMessage.CreateWebSessionData(Serializer.Serialize(webs)));
+        public void SendSessionWeb(IEnumerable<IWebInfo> webs) => OnBroadcasted(SIMessage.CreateWebSessionData(Serializer.Serialize(webs)));
 
         public void SendUrlMatchResult(MatchUrlResult matchUrlResult) => OnBroadcasted(SIMessage.CreateUrlMatchResultData(JsonConvert.SerializeObject(matchUrlResult)));
 

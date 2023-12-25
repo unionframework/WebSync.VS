@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 namespace RoslynSpike.Ember.DTO {
-    public class EmberDataPayload
+    public class Payload
     {
         public List<ServiceDto> services;
         public List<PageTypeDto> pageTypes;

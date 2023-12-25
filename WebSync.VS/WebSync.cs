@@ -19,7 +19,7 @@ namespace WebSync.VS
         private readonly ISessionWebPovider _sessionWebProvider;
         private readonly IAssemblyProvider _assemblyProvider;
 
-        private IEnumerable<ISessionWeb> _sessionWebs;
+        private IEnumerable<IWebInfo> _sessionWebs;
 
 
         public WebSync(Workspace workspace, IBrowserConnection browserConnection,
@@ -110,7 +110,7 @@ namespace WebSync.VS
             CollectAndSynchronizeChanges();
         }
 
-        private void BrowserConnectionSessionWebReceived(object sender, IEnumerable<ISessionWeb> args)
+        private void BrowserConnectionSessionWebReceived(object sender, IEnumerable<IWebInfo> args)
         {
             throw new NotImplementedException();
         }
@@ -120,15 +120,17 @@ namespace WebSync.VS
             //            if (e.Kind == WorkspaceChangeKind.ProjectAdded) {
             //                MatchUrl("http://10.51.27.92/km/admin/UserInterface/General");
             //            }
-            if (!_browserConnection.Connected)
-            {
-                return;
-            }
+            //if (!_browserConnection.Connected)
+            //{
+            //    return;
+            //}
+            CollectAndSynchronizeChanges();
+
             // TODO: how to handle other events
-            if (e.Kind == WorkspaceChangeKind.DocumentChanged)
-            {
-                CollectAndSynchronizeChanges(e.DocumentId);
-            }
+            //if (e.Kind == WorkspaceChangeKind.DocumentChanged)
+            //{
+            //    CollectAndSynchronizeChanges(e.DocumentId);
+            //}
         }
 
         private async void CollectAndSynchronizeChanges(DocumentId documentId)
@@ -141,11 +143,11 @@ namespace WebSync.VS
 
         private async void CollectAndSynchronizeChanges()
         {
-            IEnumerable<ISessionWeb> sessionWebs = await _sessionWebProvider.GetSessionWebsAsync(false);
+            IEnumerable<IWebInfo> sessionWebs = await _sessionWebProvider.GetSessionWebsAsync(false);
             SynchronizeSessionWebs(sessionWebs);
         }
 
-        private void SynchronizeSessionWebs(IEnumerable<ISessionWeb> sessionWebs)
+        private void SynchronizeSessionWebs(IEnumerable<IWebInfo> sessionWebs)
         {
             //var pageType = sessionWebs.First().PageTypes["km.tests.selenium.services.kmNewUI.Pages.EndUser.Search.SearchPageBase"];
             // . Currently, there is only one

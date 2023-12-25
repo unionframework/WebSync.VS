@@ -67,7 +67,7 @@ namespace RoslynSpike.SessionWeb.RoslynModels {
         }
 
         protected virtual string GetName() {
-            var name = Attr.GetAttributeNamedArgument(ReflectionNames.WCA_WEA_NAME_PARAM);
+            var name = Attr.GetAttributeNamedArgument(ReflectionNames.AUTOINIT_NAME_PARAM);
             if (string.IsNullOrEmpty(name)) {
                 name = GetFieldName();
             }
@@ -76,9 +76,7 @@ namespace RoslynSpike.SessionWeb.RoslynModels {
 
         protected virtual string GetRootScss() {
             switch (Attr.AttributeClass.Name) {
-                case ReflectionNames.WEB_ELEMENT_ATTRRIBUTE:
-                    return Attr.GetAttributeNamedArgument(ReflectionNames.WEA_SCSS_PARAM);
-                case ReflectionNames.WEB_COMPONENT_ATTRRIBUTE:
+                case ReflectionNames.AUTOINIT_ATTRRIBUTE:
                     var args = Attr.GetAttributeConstructorArguments();
                     return args.Count > 0 ? args[0] : null;
                 default:

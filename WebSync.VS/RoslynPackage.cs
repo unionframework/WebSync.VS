@@ -53,8 +53,8 @@ namespace WebSync.VS
         /// </summary>
         public const string PackageGuidString = "46bca1d3-661d-4f59-9da7-7e7e3318e176";
 
-        private WebSync _synchronizeIt;
-        private SelectorsConverter _scssConverter;
+        private WebSync _webSync;
+        //private SelectorsConverter _selectorsConverter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoslynPackage"/> class.
@@ -87,12 +87,12 @@ namespace WebSync.VS
             var workspace = componentModel.GetService<VisualStudioWorkspace>();
 
             var browserConnection = CreateBrowserConnection();
-            _synchronizeIt = new WebSync(
+            _webSync = new WebSync(
                 workspace, 
                 browserConnection, 
-                new RoslynSessionWebProvider(workspace),
+                new RoslynWebInfoProvider(workspace),
                 new RoslynAssemblyProvider(workspace));
-            _scssConverter = new SelectorsConverter(browserConnection);
+            //_selectorsConverter = new SelectorsConverter(browserConnection);
         }
 
         #endregion.

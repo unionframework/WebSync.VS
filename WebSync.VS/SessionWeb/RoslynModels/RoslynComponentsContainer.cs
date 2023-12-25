@@ -21,24 +21,15 @@ namespace RoslynSpike.SessionWeb.RoslynModels {
             foreach (var symbol in fields)
             {
                 var attrs = symbol.GetAttributes();
-                var webElementAttr = GetWebElementAttribute(attrs);
-                var webComponentAttr = GetWebComponentAttribute(attrs);
-                if ((webElementAttr == null && webComponentAttr == null) ||
-                    (webElementAttr != null && webComponentAttr != null))
+                var webComponentAttr = GetAutoInitAttribute(attrs);
+                if (webComponentAttr == null)
                 {
-                    // . no element/comonent attributes OR ambigious attributes
+                    // . no autoinit attribute
                     continue;
-                }
-                if (webElementAttr != null)
-                {
-                    // . this is a WebElement field
-                    var componentInstance = GetComponentInstance(symbol, webElementAttr);
-                    if (componentInstance != null)
-                        Components.Add(componentInstance);
                 }
                 if (webComponentAttr != null)
                 {
-                    // . this is a WebComponent field
+                    // . this field should be auto initialized with Union
                     var componentInstance = GetComponentInstance(symbol, webComponentAttr);
                     if (componentInstance != null)
                         Components.Add(componentInstance);
@@ -66,14 +57,9 @@ namespace RoslynSpike.SessionWeb.RoslynModels {
             return component;
         }
 
-        protected AttributeData GetWebComponentAttribute(ImmutableArray<AttributeData> attrs)
+        protected AttributeData GetAutoInitAttribute(ImmutableArray<AttributeData> attrs)
         {
-            return GetAttributeOfType(attrs, ReflectionNames.WEB_COMPONENT_ATTRRIBUTE);
-        }
-
-        protected AttributeData GetWebElementAttribute(ImmutableArray<AttributeData> attrs)
-        {
-            return GetAttributeOfType(attrs, ReflectionNames.WEB_ELEMENT_ATTRRIBUTE);
+            return GetAttributeOfType(attrs, ReflectionNames.AUTOINIT_ATTRRIBUTE);
         }
     }
 }
