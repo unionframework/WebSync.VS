@@ -19,7 +19,7 @@ namespace RoslynSpike.SessionWeb
     public class RoslynWebInfoProvider:ISessionWebPovider
     {
         private readonly VisualStudioWorkspace _workspace;
-        private IEnumerable<IWebInfo> _cachedSessionWebs;
+        private IEnumerable<IProjectInfo> _cachedSessionWebs;
 
         public RoslynWebInfoProvider(VisualStudioWorkspace workspace)
         {
@@ -28,7 +28,7 @@ namespace RoslynSpike.SessionWeb
 
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public async Task<IEnumerable<IWebInfo>> GetSessionWebsAsync(bool useCache) {
+        public async Task<IEnumerable<IProjectInfo>> GetProjectInfoAsync(bool useCache) {
             if (_cachedSessionWebs == null || !useCache) {
                 try {
                     var solution = _workspace.CurrentSolution;
@@ -39,7 +39,7 @@ namespace RoslynSpike.SessionWeb
 
                     // . for now, we unable to extract sessions, so everything is store in one session
                     var roslynWebInfo = new RoslynWebInfo(services, components, pages);
-                    var webInfoList = new List<IWebInfo> {roslynWebInfo};
+                    var webInfoList = new List<IProjectInfo> {roslynWebInfo};
                     CacheWebInfo(webInfoList);
                     return webInfoList;
                 }
@@ -51,7 +51,7 @@ namespace RoslynSpike.SessionWeb
             return _cachedSessionWebs;
         }
 
-        public async Task<bool> UpdateSessionWebsAsync(IWebInfo webInfo, DocumentId changedDocumentId)
+        public async Task<bool> UpdateSessionWebsAsync(IProjectInfo webInfo, DocumentId changedDocumentId)
         {
             try
             {
@@ -81,11 +81,11 @@ namespace RoslynSpike.SessionWeb
             }
         }
 
-        private void CacheWebInfo(List<IWebInfo> sessionWebs) {
+        private void CacheWebInfo(List<IProjectInfo> sessionWebs) {
             _cachedSessionWebs = sessionWebs;
         }
 
-        private IEnumerable<IWebInfo> UpdateCachedSessionWebs(IEnumerable<RoslynPageType> pageTypes, IEnumerable<RoslynComponentType> componentTypes) {
+        private IEnumerable<IProjectInfo> UpdateCachedSessionWebs(IEnumerable<RoslynPageType> pageTypes, IEnumerable<RoslynComponentType> componentTypes) {
             // TODO: For now we have only one
             var sessionWeb = _cachedSessionWebs.First();
 

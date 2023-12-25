@@ -4,7 +4,7 @@ using RoslynSpike.SessionWeb.Models;
 
 namespace RoslynSpike.SessionWeb.RoslynModels
 {
-    public class RoslynWebInfo : IWebInfo
+    public class RoslynWebInfo : IProjectInfo
     {
         public RoslynWebInfo(IEnumerable<RoslynService> services, IEnumerable<RoslynComponentType> componentTypes,
             IEnumerable<RoslynPageType> pageTypes)

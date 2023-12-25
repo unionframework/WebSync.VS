@@ -35,10 +35,10 @@ namespace RoslynSpike.BrowserConnection
             }
         }
 
-        public static SIMessage CreateWebSessionData(string data) => new SIMessage(SIMessageType.SessionWebData, data);
+        public static SIMessage CreateProjectNamesMessage(string data) => new SIMessage(SIMessageType.ProjectNames, data);
+        
+        public static SIMessage CreateProjectMessage(string data) => new SIMessage(SIMessageType.Project, data);
 
-        public static SIMessage CreateConvertedSelectorData(string data) => new SIMessage(SIMessageType.ConvertedSelector, data);
-
-        public static SIMessage CreateUrlMatchResultData(string data) => new SIMessage(SIMessageType.UrlMatchResult, data);
+        public static SIMessage CreateUrlMatchResultessage(string data) => new SIMessage(SIMessageType.UrlMatchResult, data);
     }
 }

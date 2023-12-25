@@ -1,25 +1,17 @@
-﻿using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.LanguageServices;
-using Microsoft.VisualStudio.OLE.Interop;
+﻿using Microsoft.VisualStudio.LanguageServices;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Win32;
 using RoslynSpike.BrowserConnection.WebSocket;
 using RoslynSpike.BrowserConnection;
-using RoslynSpike.Converter;
+
 using RoslynSpike.Ember;
 using System;
-using System.ComponentModel.Design;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 using RoslynSpike.SessionWeb;
 using RoslynSpike.Compiler;
-using System.Composition;
 using Microsoft.VisualStudio.ComponentModelHost;
 
 namespace WebSync.VS
@@ -105,7 +97,7 @@ namespace WebSync.VS
                 //#if !DEBUG
                 //                var connection = new WebSocketBrowserConnection(18000, "/websync", new EmberSerializer());
                 //#else
-                var connection = new WebSocketBrowserConnection(18488, "/websync", new EmberSerializer());
+                var connection = new WebSocketBrowserConnection(1804, "/websync", new EmberSerializer());
                 //#endif
 
                 connection.Connect();

@@ -16,10 +16,10 @@ namespace WebSync.VS
         private static Logger _log = LogManager.GetCurrentClassLogger();
         private readonly Workspace _workspace;
         private readonly IBrowserConnection _browserConnection;
-        private readonly ISessionWebPovider _sessionWebProvider;
+        private readonly ISessionWebPovider _projectInfoProvider;
         private readonly IAssemblyProvider _assemblyProvider;
 
-        private IEnumerable<IWebInfo> _sessionWebs;
+        private IEnumerable<IProjectInfo> _sessionWebs;
 
 
         public WebSync(Workspace workspace, IBrowserConnection browserConnection,
@@ -27,12 +27,22 @@ namespace WebSync.VS
         {
             _workspace = workspace;
             _browserConnection = browserConnection;
-            _sessionWebProvider = sessionWebProvider;
+            _projectInfoProvider = sessionWebProvider;
             _assemblyProvider = assemblyProvider;
-            _browserConnection.SessionWebRequested += _browserConnection_SessionWebRequested;
-            _browserConnection.SessionWebReceived += BrowserConnectionSessionWebReceived;
+            _browserConnection.ProjectNamesRequested += _browserConnection_ProjectNamesRequested;
+            _browserConnection.ProjectRequested += _browserConnection_ProjectRequested;
             _browserConnection.UrlToMatchReceived += _browserConnection_UrlToMatchReceived;
             _workspace.WorkspaceChanged += _workspace_WorkspaceChanged;
+        }
+
+        private void _browserConnection_ProjectNamesRequested(object sender, EventArgs e)
+        {
+            _browserConnection.SendProjectNames(new List<string>() { "StackOverflowTests" });
+        }
+
+        private void _browserConnection_ProjectRequested(object sender, string e)
+        {
+            CollectAndSynchronizeChanges();
         }
 
         private void _browserConnection_UrlToMatchReceived(object sender, string url)
@@ -105,53 +115,43 @@ namespace WebSync.VS
             //            }
         }
 
-        private void _browserConnection_SessionWebRequested(object sender, EventArgs e)
-        {
-            CollectAndSynchronizeChanges();
-        }
-
-        private void BrowserConnectionSessionWebReceived(object sender, IEnumerable<IWebInfo> args)
-        {
-            throw new NotImplementedException();
-        }
 
         private void _workspace_WorkspaceChanged(object sender, WorkspaceChangeEventArgs e)
         {
             //            if (e.Kind == WorkspaceChangeKind.ProjectAdded) {
             //                MatchUrl("http://10.51.27.92/km/admin/UserInterface/General");
             //            }
-            //if (!_browserConnection.Connected)
-            //{
-            //    return;
-            //}
-            CollectAndSynchronizeChanges();
+            if (!_browserConnection.Connected)
+            {
+                return;
+            }
 
             // TODO: how to handle other events
-            //if (e.Kind == WorkspaceChangeKind.DocumentChanged)
-            //{
-            //    CollectAndSynchronizeChanges(e.DocumentId);
-            //}
+            if (e.Kind == WorkspaceChangeKind.DocumentChanged)
+            {
+                CollectAndSynchronizeChanges(e.DocumentId);
+            }
         }
 
         private async void CollectAndSynchronizeChanges(DocumentId documentId)
         {
-            if (await _sessionWebProvider.UpdateSessionWebsAsync(_sessionWebs.First(), documentId))
+            if (await _projectInfoProvider.UpdateSessionWebsAsync(_sessionWebs.First(), documentId))
             {
-                SynchronizeSessionWebs(_sessionWebs);
+                SynchronizeProjectInfo(_sessionWebs);
             }
         }
 
         private async void CollectAndSynchronizeChanges()
         {
-            IEnumerable<IWebInfo> sessionWebs = await _sessionWebProvider.GetSessionWebsAsync(false);
-            SynchronizeSessionWebs(sessionWebs);
+            IEnumerable<IProjectInfo> sessionWebs = await _projectInfoProvider.GetProjectInfoAsync(false);
+            SynchronizeProjectInfo(sessionWebs);
         }
 
-        private void SynchronizeSessionWebs(IEnumerable<IWebInfo> sessionWebs)
+        private void SynchronizeProjectInfo(IEnumerable<IProjectInfo> sessionWebs)
         {
             //var pageType = sessionWebs.First().PageTypes["km.tests.selenium.services.kmNewUI.Pages.EndUser.Search.SearchPageBase"];
             // . Currently, there is only one
-            _browserConnection.SendSessionWeb(sessionWebs);
+            _browserConnection.SendProject(sessionWebs.First());
             _sessionWebs = sessionWebs;
         }
     }

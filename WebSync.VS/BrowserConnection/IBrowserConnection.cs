@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using RoslynSpike.Converter;
 using RoslynSpike.Reflection;
 using RoslynSpike.SessionWeb.Models;
 
@@ -11,16 +10,15 @@ namespace RoslynSpike.BrowserConnection
     /// </summary>
     public interface IBrowserConnection
     {
-        ISessionWebSerializer Serializer { get; }
+        IWebInfoSerializer Serializer { get; }
         void Connect();
         void Close();
         bool Connected { get; }
-        event EventHandler<IEnumerable<IWebInfo>> SessionWebReceived;
-        event EventHandler SessionWebRequested;
-        event EventHandler<string> SelectorToConvertReceived;
+        event EventHandler<string> ProjectRequested;
+        event EventHandler ProjectNamesRequested;
         event EventHandler<string> UrlToMatchReceived;
-        void SendSelector(Selector selector);
-        void SendSessionWeb(IEnumerable<IWebInfo> webs);
+        void SendProject(IProjectInfo projectInfo);
+        void SendProjectNames(IEnumerable<string> projectNames);
         void SendUrlMatchResult(MatchUrlResult matchUrlResult);
     }
 }

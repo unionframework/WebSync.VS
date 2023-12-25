@@ -56,13 +56,11 @@
     <Compile Include="AssemblyProvider\ICompiler.cs" />
     <Compile Include="AssemblyProvider\RoslynAssemblyProvider.cs" />
     <Compile Include="BrowserConnection\IBrowserConnection.cs" />
-    <Compile Include="BrowserConnection\ISessionWebSerializer.cs" />
+    <Compile Include="BrowserConnection\IWebInfoSerializer.cs" />
     <Compile Include="BrowserConnection\SIMessage.cs" />
     <Compile Include="BrowserConnection\SIMessageType.cs" />
     <Compile Include="BrowserConnection\WebSocket\SynchronizeBehaviour.cs" />
     <Compile Include="BrowserConnection\WebSocket\WebSocketBrowserConnection.cs" />
-    <Compile Include="Converter\Selector.cs" />
-    <Compile Include="Converter\SelectorsConverter.cs" />
     <Compile Include="DTO\ComponentDto.cs" />
     <Compile Include="DTO\ComponentsContainerDTO.cs" />
     <Compile Include="DTO\ComponentTypeDto.cs" />
@@ -91,7 +89,7 @@
     <Compile Include="SessionWeb\Models\IComponentType.cs" />
     <Compile Include="SessionWeb\Models\IPageType.cs" />
     <Compile Include="SessionWeb\Models\IService.cs" />
-    <Compile Include="SessionWeb\Models\IWebInfo.cs" />
+    <Compile Include="SessionWeb\Models\IProjectInfo.cs" />
     <Compile Include="SessionWeb\Models\WebElementTypes.cs" />
     <Compile Include="SessionWeb\RoslynModels\RoslynComponentInstance.cs" />
     <Compile Include="SessionWeb\RoslynModels\RoslynComponentInstanceBase.cs" />
