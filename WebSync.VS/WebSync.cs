@@ -9,9 +9,9 @@ using RoslynSpike.Reflection;
 using RoslynSpike.SessionWeb;
 using RoslynSpike.SessionWeb.Models;
 
-namespace Natu.WebSync.VS
+namespace WebSync.VS
 {
-    public class SynchronizeIt
+    public class WebSync
     {
         private static Logger _log = LogManager.GetCurrentClassLogger();
         private readonly Workspace _workspace;
@@ -20,9 +20,9 @@ namespace Natu.WebSync.VS
         private readonly IAssemblyProvider _assemblyProvider;
 
         private IEnumerable<ISessionWeb> _sessionWebs;
-        
 
-        public SynchronizeIt(Workspace workspace, IBrowserConnection browserConnection,
+
+        public WebSync(Workspace workspace, IBrowserConnection browserConnection,
             ISessionWebPovider sessionWebProvider, IAssemblyProvider assemblyProvider)
         {
             _workspace = workspace;
@@ -35,16 +35,20 @@ namespace Natu.WebSync.VS
             _workspace.WorkspaceChanged += _workspace_WorkspaceChanged;
         }
 
-        private void _browserConnection_UrlToMatchReceived(object sender, string url) {
+        private void _browserConnection_UrlToMatchReceived(object sender, string url)
+        {
             MatchUrl(url);
         }
 
-        private void MatchUrl(string url) {
-            try {
+        private void MatchUrl(string url)
+        {
+            try
+            {
                 LogInfo($"MatchUrl: {url}");
                 _log.Info($"MatchUrl: {url}");
                 var assemblies = _assemblyProvider.GetAssemblies();
-                if (assemblies != null) {
+                if (assemblies != null)
+                {
                     LogInfo($"Compiled successfully.");
                     var urlMatcher = new UrlMatcher(assemblies.Item1, assemblies.Item2);
                     var matchUrlResult = urlMatcher.Match(url);
@@ -56,11 +60,13 @@ namespace Natu.WebSync.VS
                     }
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 LogInfo($"Error!!!");
                 LogInfo(e.Message);
                 LogInfo(e.StackTrace);
-                if (e.InnerException!=null) {
+                if (e.InnerException != null)
+                {
                     LogInfo(e.InnerException.Message);
                     LogInfo(e.InnerException.StackTrace);
                 }
@@ -92,10 +98,11 @@ namespace Natu.WebSync.VS
 
         }
 
-        private void LogInfo(string s) {
-//            using (var streamWriter = File.AppendText("c:\\logs\\natu.log")) {
-//                streamWriter.WriteLine(s);
-//            }
+        private void LogInfo(string s)
+        {
+            //            using (var streamWriter = File.AppendText("c:\\logs\\natu.log")) {
+            //                streamWriter.WriteLine(s);
+            //            }
         }
 
         private void _browserConnection_SessionWebRequested(object sender, EventArgs e)
@@ -108,15 +115,18 @@ namespace Natu.WebSync.VS
             throw new NotImplementedException();
         }
 
-        private void _workspace_WorkspaceChanged(object sender, WorkspaceChangeEventArgs e) {
-//            if (e.Kind == WorkspaceChangeKind.ProjectAdded) {
-//                MatchUrl("http://10.51.27.92/km/admin/UserInterface/General");
-//            }
-            if (!_browserConnection.Connected) {
+        private void _workspace_WorkspaceChanged(object sender, WorkspaceChangeEventArgs e)
+        {
+            //            if (e.Kind == WorkspaceChangeKind.ProjectAdded) {
+            //                MatchUrl("http://10.51.27.92/km/admin/UserInterface/General");
+            //            }
+            if (!_browserConnection.Connected)
+            {
                 return;
             }
             // TODO: how to handle other events
-            if (e.Kind == WorkspaceChangeKind.DocumentChanged) {
+            if (e.Kind == WorkspaceChangeKind.DocumentChanged)
+            {
                 CollectAndSynchronizeChanges(e.DocumentId);
             }
         }

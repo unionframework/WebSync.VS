@@ -1,8 +1,13 @@
 ﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.LanguageServices;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using RoslynSpike.BrowserConnection.WebSocket;
+using RoslynSpike.BrowserConnection;
+using RoslynSpike.Converter;
+using RoslynSpike.Ember;
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
@@ -12,6 +17,10 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
+using RoslynSpike.SessionWeb;
+using RoslynSpike.Compiler;
+using System.Composition;
+using Microsoft.VisualStudio.ComponentModelHost;
 
 namespace WebSync.VS
 {
@@ -44,6 +53,9 @@ namespace WebSync.VS
         /// </summary>
         public const string PackageGuidString = "46bca1d3-661d-4f59-9da7-7e7e3318e176";
 
+        private WebSync _synchronizeIt;
+        private SelectorsConverter _scssConverter;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RoslynPackage"/> class.
         /// </summary>
@@ -71,24 +83,40 @@ namespace WebSync.VS
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-            IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
-            Guid clsid = Guid.Empty;
-            int result;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(
-                0,
-                ref clsid,
-                "RoslynPackage",
-                 string.Format(CultureInfo.CurrentCulture, "Inside {0}.Initialize()", this.GetType().FullName),
-                string.Empty,
-                0,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST,
-                OLEMSGICON.OLEMSGICON_INFO,
-                0,
-                out result));
+            IComponentModel componentModel = GetService(typeof(SComponentModel)) as IComponentModel;
+            var workspace = componentModel.GetService<VisualStudioWorkspace>();
 
+            var browserConnection = CreateBrowserConnection();
+            _synchronizeIt = new WebSync(
+                workspace, 
+                browserConnection, 
+                new RoslynSessionWebProvider(workspace),
+                new RoslynAssemblyProvider(workspace));
+            _scssConverter = new SelectorsConverter(browserConnection);
         }
 
-        #endregion
+        #endregion.
+
+
+        private IBrowserConnection CreateBrowserConnection()
+        {
+            try
+            {
+                //#if !DEBUG
+                //                var connection = new WebSocketBrowserConnection(18000, "/websync", new EmberSerializer());
+                //#else
+                var connection = new WebSocketBrowserConnection(18488, "/websync", new EmberSerializer());
+                //#endif
+
+                connection.Connect();
+                return connection;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine();
+                throw;
+            }
+        }
+
     }
 }
