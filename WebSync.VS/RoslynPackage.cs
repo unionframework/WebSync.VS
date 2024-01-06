@@ -82,7 +82,7 @@ namespace WebSync.VS
             _webSync = new WebSync(
                 workspace, 
                 browserConnection, 
-                new RoslynWebInfoProvider(workspace),
+                new RoslynProjectInfoProvider(workspace),
                 new RoslynAssemblyProvider(workspace));
             //_selectorsConverter = new SelectorsConverter(browserConnection);
         }
@@ -97,7 +97,7 @@ namespace WebSync.VS
                 //#if !DEBUG
                 //                var connection = new WebSocketBrowserConnection(18000, "/websync", new EmberSerializer());
                 //#else
-                var connection = new WebSocketBrowserConnection(1804, "/websync", new EmberSerializer());
+                var connection = new WebSocketBrowserConnection(1804, "/websync", new MobxSerializer());
                 //#endif
 
                 connection.Connect();

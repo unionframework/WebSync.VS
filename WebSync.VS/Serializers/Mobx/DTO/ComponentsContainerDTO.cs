@@ -5,10 +5,10 @@ using RoslynSpike.SessionWeb.Models;
 namespace RoslynSpike.Ember.DTO
 {
     public class ComponentsContainerDTO:DtoBase {
-        public List<string> components;
+        public List<ComponentInstanceDto> componentnstances;
 
         public ComponentsContainerDTO(IComponentsContainer container) : base(container.Id) {
-            components = container.Components.Select(c => c.Id).ToList();
+            componentnstances = container.ComponentInstances.Select(c => new ComponentInstanceDto(c)).ToList();
         }
     }
 }

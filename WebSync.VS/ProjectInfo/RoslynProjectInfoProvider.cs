@@ -13,15 +13,16 @@ using RoslynSpike.SessionWeb.RoslynModels;
 using Solution = Microsoft.CodeAnalysis.Solution;
 using Microsoft.VisualStudio.LanguageServices;
 using RoslynSpike.Utilities.Extensions;
+using System.IO;
 
 namespace RoslynSpike.SessionWeb
 {
-    public class RoslynWebInfoProvider:ISessionWebPovider
+    public class RoslynProjectInfoProvider:IProjectInfoPovider
     {
         private readonly VisualStudioWorkspace _workspace;
         private IEnumerable<IProjectInfo> _cachedSessionWebs;
 
-        public RoslynWebInfoProvider(VisualStudioWorkspace workspace)
+        public RoslynProjectInfoProvider(VisualStudioWorkspace workspace)
         {
             _workspace = workspace;
         }
@@ -32,16 +33,15 @@ namespace RoslynSpike.SessionWeb
             if (_cachedSessionWebs == null || !useCache) {
                 try {
                     var solution = _workspace.CurrentSolution;
-
                     var services = await GetServicesAsync(solution);
                     var pages = await GetPagesAsync(solution);
                     var components = await GetComponentsAsync(solution);
 
                     // . for now, we unable to extract sessions, so everything is store in one session
-                    var roslynWebInfo = new RoslynWebInfo(services, components, pages);
-                    var webInfoList = new List<IProjectInfo> {roslynWebInfo};
-                    CacheWebInfo(webInfoList);
-                    return webInfoList;
+                    var roslynProjectInfo = new RoslynProjectInfo(Path.GetFileNameWithoutExtension(solution.FilePath), services, components, pages);
+                    var projectInfoList = new List<IProjectInfo> {roslynProjectInfo};
+                    CacheWebInfo(projectInfoList);
+                    return projectInfoList;
                 }
                 catch (Exception ex) {
                     _log.Error(ex, "Unable to collect selenium contexts");
@@ -51,7 +51,7 @@ namespace RoslynSpike.SessionWeb
             return _cachedSessionWebs;
         }
 
-        public async Task<bool> UpdateSessionWebsAsync(IProjectInfo webInfo, DocumentId changedDocumentId)
+        public async Task<bool> UpdateProjectsAsync(IProjectInfo webInfo, DocumentId changedDocumentId)
         {
             try
             {

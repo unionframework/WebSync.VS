@@ -7,7 +7,7 @@ using Union.Attributes;
 
 namespace Union.Tests.Example.Services.StackOverflow
 {
-    internal class QuestionPage
+    internal class QuestionPage:UnionPage
     {
         [UnionInit(".title")]
         public UnionElement Title;

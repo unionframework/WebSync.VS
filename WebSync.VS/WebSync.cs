@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using EnvDTE;
 using Microsoft.CodeAnalysis;
 using NLog;
 using RoslynSpike.BrowserConnection;
@@ -16,14 +18,14 @@ namespace WebSync.VS
         private static Logger _log = LogManager.GetCurrentClassLogger();
         private readonly Workspace _workspace;
         private readonly IBrowserConnection _browserConnection;
-        private readonly ISessionWebPovider _projectInfoProvider;
+        private readonly IProjectInfoPovider _projectInfoProvider;
         private readonly IAssemblyProvider _assemblyProvider;
 
-        private IEnumerable<IProjectInfo> _sessionWebs;
+        private IEnumerable<IProjectInfo> _projects;
 
 
         public WebSync(Workspace workspace, IBrowserConnection browserConnection,
-            ISessionWebPovider sessionWebProvider, IAssemblyProvider assemblyProvider)
+            IProjectInfoPovider sessionWebProvider, IAssemblyProvider assemblyProvider)
         {
             _workspace = workspace;
             _browserConnection = browserConnection;
@@ -37,7 +39,8 @@ namespace WebSync.VS
 
         private void _browserConnection_ProjectNamesRequested(object sender, EventArgs e)
         {
-            _browserConnection.SendProjectNames(new List<string>() { "StackOverflowTests" });
+            var solutionName = Path.GetFileNameWithoutExtension(_workspace.CurrentSolution.FilePath);
+            _browserConnection.SendProjectNames(new List<string>() { solutionName });
         }
 
         private void _browserConnection_ProjectRequested(object sender, string e)
@@ -135,24 +138,27 @@ namespace WebSync.VS
 
         private async void CollectAndSynchronizeChanges(DocumentId documentId)
         {
-            if (await _projectInfoProvider.UpdateSessionWebsAsync(_sessionWebs.First(), documentId))
+            if (_projects!=null && _projects.Count() > 0)
             {
-                SynchronizeProjectInfo(_sessionWebs);
+                if (await _projectInfoProvider.UpdateProjectsAsync(_projects.First(), documentId))
+                {
+                    SynchronizeProjectInfo(_projects);
+                }
             }
         }
 
         private async void CollectAndSynchronizeChanges()
         {
-            IEnumerable<IProjectInfo> sessionWebs = await _projectInfoProvider.GetProjectInfoAsync(false);
-            SynchronizeProjectInfo(sessionWebs);
+            IEnumerable<IProjectInfo> projects = await _projectInfoProvider.GetProjectInfoAsync(false);
+            SynchronizeProjectInfo(projects);
         }
 
-        private void SynchronizeProjectInfo(IEnumerable<IProjectInfo> sessionWebs)
+        private void SynchronizeProjectInfo(IEnumerable<IProjectInfo> projects)
         {
             //var pageType = sessionWebs.First().PageTypes["km.tests.selenium.services.kmNewUI.Pages.EndUser.Search.SearchPageBase"];
             // . Currently, there is only one
-            _browserConnection.SendProject(sessionWebs.First());
-            _sessionWebs = sessionWebs;
+            _browserConnection.SendProject(projects.First());
+            _projects = projects;
         }
     }
 }

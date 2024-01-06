@@ -4,23 +4,25 @@ using RoslynSpike.SessionWeb.Models;
 
 namespace RoslynSpike.SessionWeb.RoslynModels
 {
-    public class RoslynWebInfo : IProjectInfo
+    public class RoslynProjectInfo : IProjectInfo
     {
-        public RoslynWebInfo(IEnumerable<RoslynService> services, IEnumerable<RoslynComponentType> componentTypes,
+        public RoslynProjectInfo(string projectName, IEnumerable<RoslynService> services, IEnumerable<RoslynComponentType> componentTypes,
             IEnumerable<RoslynPageType> pageTypes)
         {
+            ProjectName=projectName;
             Services = services.ToDictionary(s => s.Id, s => (IService) s);
             ComponentTypes = componentTypes.ToDictionary(ct => ct.Id, ct => (IComponentType) ct);
             PageTypes = pageTypes.ToDictionary(pt => pt.Id, pt => (IPageType) pt);
         }
 
+        public string ProjectName { get; }
         public Dictionary<string, IPageType> PageTypes { get; }
         public Dictionary<string, IService> Services { get; }
         public Dictionary<string, IComponentType> ComponentTypes { get; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is RoslynWebInfo sessionWeb2))
+            if (!(obj is RoslynProjectInfo sessionWeb2))
             {
                 return false;
             }

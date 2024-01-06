@@ -94,7 +94,7 @@ namespace RoslynSpike.BrowserConnection.WebSocket
 
         public void SendProject(IProjectInfo projectInfo)
         {
-            OnBroadcasted(BrowserMessage.CreateProjectMessage(projectInfo));
+            OnBroadcasted(BrowserMessage.CreateProjectMessage(Serializer.Serialize(projectInfo)));
         }
 
         public void SendProjectNames(IEnumerable<string> projectNames)

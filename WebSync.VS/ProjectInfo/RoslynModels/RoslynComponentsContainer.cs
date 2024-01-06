@@ -6,7 +6,7 @@ using RoslynSpike.SessionWeb.Models;
 
 namespace RoslynSpike.SessionWeb.RoslynModels {
     public abstract class RoslynComponentsContainer<T> : RoslynNamedTypeWrapper<T>,IComponentsContainer {
-        public List<IComponentInstance> Components { get; set; }
+        public List<IComponentInstance> ComponentInstances { get; set; }
 
         protected RoslynComponentsContainer(INamedTypeSymbol type) : base(type)
         {
@@ -15,7 +15,7 @@ namespace RoslynSpike.SessionWeb.RoslynModels {
         public override void Fill() {
             base.Fill();
 
-            Components = new List<IComponentInstance>();
+            ComponentInstances = new List<IComponentInstance>();
 
             var fields = Type.GetMembers().Where(m => m.Kind == SymbolKind.Field || m.Kind == SymbolKind.Property);
             foreach (var symbol in fields)
@@ -32,7 +32,7 @@ namespace RoslynSpike.SessionWeb.RoslynModels {
                     // . this field should be auto initialized with Union
                     var componentInstance = GetComponentInstance(symbol, webComponentAttr);
                     if (componentInstance != null)
-                        Components.Add(componentInstance);
+                        ComponentInstances.Add(componentInstance);
                 }
             }
 

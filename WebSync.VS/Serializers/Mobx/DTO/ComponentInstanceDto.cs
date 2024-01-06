@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace RoslynSpike.Ember.DTO
 {
-    public class ComponentDto : DtoBase
+    public class ComponentInstanceDto : DtoBase
     {
         public string componentType { get; }
         public string name { get; }
@@ -13,7 +13,7 @@ namespace RoslynSpike.Ember.DTO
         public int fieldIndex;
         public string fieldName;
 
-        public ComponentDto(IComponentInstance component) : base(component.Id)
+        public ComponentInstanceDto(IComponentInstance component) : base(component.Id)
         {
             componentType = component.ComponentType;
             name = component.Name;

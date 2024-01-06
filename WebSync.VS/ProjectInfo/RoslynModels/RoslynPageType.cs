@@ -34,8 +34,8 @@ namespace RoslynSpike.SessionWeb.RoslynModels {
                 return false;
             }
 
-            if (Components.Count != pageType2.Components.Count ||
-                !Components.SequenceEqual(pageType2.Components, new ComponentInstanceComparer()))
+            if (ComponentInstances.Count != pageType2.ComponentInstances.Count ||
+                !ComponentInstances.SequenceEqual(pageType2.ComponentInstances, new ComponentInstanceComparer()))
             {
                 return false;
             }
