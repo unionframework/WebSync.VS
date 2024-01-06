@@ -6,7 +6,7 @@ using RoslynSpike.Ember.DTO;
 using RoslynSpike.SessionWeb.Models;
 
 namespace RoslynSpike.Ember {
-    internal class EmberSerializer : IWebInfoSerializer {
+    internal class EmberSerializer : IProjectInfoSerializer {
         public string Serialize(IEnumerable<IProjectInfo> webs) {
             var payload = new Payload();
             foreach (var web in webs) {

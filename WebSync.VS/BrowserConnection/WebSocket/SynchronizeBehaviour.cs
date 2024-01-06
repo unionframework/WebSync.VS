@@ -29,14 +29,14 @@ namespace RoslynSpike.BrowserConnection.WebSocket
             _log.Error(e.Exception, e.Message);
         }
 
-        private void _browserConnection_Broadcasted(object sender, SIMessage e)
+        private void _browserConnection_Broadcasted(object sender, BrowserMessage e)
         {
             Sessions.Broadcast(e.Serialize());
         }
 
         protected override void OnMessage(MessageEventArgs e)
         {
-            _browserConnection.OnMessage(SIMessage.Deserialize(e.Data));
+            _browserConnection.OnMessage(BrowserMessage.Deserialize(e.Data));
         }
     }
 }

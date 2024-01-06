@@ -22,14 +22,14 @@ namespace RoslynSpike.BrowserConnection.WebSocket
         public event EventHandler<string> ProjectRequested;
         public event EventHandler ProjectNamesRequested;
         public event EventHandler<string> UrlToMatchReceived;
-        public event EventHandler<SIMessage> Broadcasted;
+        public event EventHandler<BrowserMessage> Broadcasted;
 
-        public IWebInfoSerializer Serializer { get; }
+        public IProjectInfoSerializer Serializer { get; }
         
 
         public bool Connected => Broadcasted != null && Broadcasted.GetInvocationList().Length > 0;
 
-        public WebSocketBrowserConnection(int serverPort, string path, IWebInfoSerializer serializer)
+        public WebSocketBrowserConnection(int serverPort, string path, IProjectInfoSerializer serializer)
         {
             _serverPort = serverPort;
             _path = path;
@@ -55,18 +55,19 @@ namespace RoslynSpike.BrowserConnection.WebSocket
             return webSocket;
         }
 
-        public void OnMessage(SIMessage message)
+        public void OnMessage(BrowserMessage message)
         {
+            // TODO: parse messages to typed objects
             switch (message.Type)
             {
-                case SIMessageType.GetProjectNames:
+                case BrowserMessageType.GetProjectNames:
                     OnProjectNamesRequested();
                     break;
-                case SIMessageType.GetProject:
-                    OnProjectRequested(message.Data);
+                case BrowserMessageType.GetProject:
+                    OnProjectRequested(message.Data as string);
                     break;
-                case SIMessageType.MatchUrl:
-                    OnMatchUrlReceived(message.Data);
+                case BrowserMessageType.MatchUrl:
+                    OnMatchUrlReceived(message.Data as string);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -79,28 +80,26 @@ namespace RoslynSpike.BrowserConnection.WebSocket
 
         private void OnMatchUrlReceived(string url) => UrlToMatchReceived?.Invoke(this, url);
 
-        public void SendProject(IEnumerable<IProjectInfo> webs) => OnBroadcasted(SIMessage.CreateProjectNamesMessage(Serializer.Serialize(webs)));
-
-        public void SendUrlMatchResult(MatchUrlResult matchUrlResult) => OnBroadcasted(SIMessage.CreateUrlMatchResultessage(JsonConvert.SerializeObject(matchUrlResult)));
+        public void SendUrlMatchResult(MatchUrlResult matchUrlResult) => OnBroadcasted(BrowserMessage.CreateUrlMatchResultessage(JsonConvert.SerializeObject(matchUrlResult)));
 
         public void Close()
         {
             _webSocketServer.Stop();
         }
 
-        protected virtual void OnBroadcasted(SIMessage msg)
+        protected virtual void OnBroadcasted(BrowserMessage msg)
         {
             Broadcasted?.Invoke(this, msg);
         }
 
         public void SendProject(IProjectInfo projectInfo)
         {
-            throw new NotImplementedException();
+            OnBroadcasted(BrowserMessage.CreateProjectMessage(projectInfo));
         }
 
         public void SendProjectNames(IEnumerable<string> projectNames)
         {
-            throw new NotImplementedException();
+            OnBroadcasted(BrowserMessage.CreateProjectNamesMessage(projectNames));
         }
     }
 
@@ -112,7 +111,7 @@ namespace RoslynSpike.BrowserConnection.WebSocket
         [SetUp]
         public void SetUp()
         {
-            var serializerMoq = new Mock<IWebInfoSerializer>();
+            var serializerMoq = new Mock<IProjectInfoSerializer>();
             _connection = new WebSocketBrowserConnection(18488, "synchronize", serializerMoq.Object);
         }
 

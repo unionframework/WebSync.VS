@@ -10,7 +10,7 @@ namespace RoslynSpike.BrowserConnection
     /// </summary>
     public interface IBrowserConnection
     {
-        IWebInfoSerializer Serializer { get; }
+        IProjectInfoSerializer Serializer { get; }
         void Connect();
         void Close();
         bool Connected { get; }

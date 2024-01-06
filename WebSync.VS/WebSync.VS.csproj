@@ -56,9 +56,9 @@
     <Compile Include="AssemblyProvider\ICompiler.cs" />
     <Compile Include="AssemblyProvider\RoslynAssemblyProvider.cs" />
     <Compile Include="BrowserConnection\IBrowserConnection.cs" />
-    <Compile Include="BrowserConnection\IWebInfoSerializer.cs" />
-    <Compile Include="BrowserConnection\SIMessage.cs" />
-    <Compile Include="BrowserConnection\SIMessageType.cs" />
+    <Compile Include="BrowserConnection\IProjectInfoSerializer.cs" />
+    <Compile Include="BrowserConnection\BrowserMessage.cs" />
+    <Compile Include="BrowserConnection\BrowserMessageType.cs" />
     <Compile Include="BrowserConnection\WebSocket\SynchronizeBehaviour.cs" />
     <Compile Include="BrowserConnection\WebSocket\WebSocketBrowserConnection.cs" />
     <Compile Include="DTO\ComponentDto.cs" />

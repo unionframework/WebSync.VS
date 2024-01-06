@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 namespace RoslynSpike.BrowserConnection
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum SIMessageType
+    public enum BrowserMessageType
     {
         MatchUrl,
         UrlMatchResult,
