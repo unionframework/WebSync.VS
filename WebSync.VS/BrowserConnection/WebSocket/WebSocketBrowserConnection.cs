@@ -69,6 +69,9 @@ namespace RoslynSpike.BrowserConnection.WebSocket
                 case BrowserMessageType.MatchUrl:
                     OnMatchUrlReceived(message.Data as string);
                     break;
+                case BrowserMessageType.OpenFile:
+                    // TODO: open file matching the page in browser
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
