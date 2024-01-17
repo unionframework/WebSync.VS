@@ -15,7 +15,7 @@ namespace RoslynSpike.Utilities.Extensions
         public static List<string> GetAttributeConstructorArguments(this AttributeData attribute)
         {
             return attribute.ConstructorArguments
-                .Select(ca => ca.Values.Length == 0 ? null : ca.Values[0].Value.ToString())
+                .Select(ca => ca.Value?.ToString())
                 .Where(ca => ca != null).ToList();
         }
     }

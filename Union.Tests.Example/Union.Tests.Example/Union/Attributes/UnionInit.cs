@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Union.Attributes
 {
-    internal class UnionInit: Attribute
+    internal class UnionInitAttribute: Attribute
     {
         public string Xcss;
-        public UnionInit(string xcss)
+        public UnionInitAttribute(string xcss)
         {
             Xcss = xcss;
         }

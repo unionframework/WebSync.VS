@@ -6,16 +6,23 @@ namespace RoslynSpike.Ember.DTO
 {
     public class ComponentInstanceDto : DtoBase
     {
-        public string componentType { get; }
+        public string componentTypeId { get; }
         public string name { get; }
         public object rootSelector { get; }
         public IEnumerable<string> constructorParams { get; }
         public int fieldIndex;
         public string fieldName;
 
+        //public String parentId;
+        //public int fieldIndex;
+        //public String componentTypeId;
+        //public String fieldName;
+        //public String name;
+        //public AnnotationDto initializationAttribute;
+
         public ComponentInstanceDto(IComponentInstance component) : base(component.Id)
         {
-            componentType = component.ComponentType;
+            componentTypeId = component.ComponentType;
             name = component.Name;
             if (component.RootSelector != null)
             {
