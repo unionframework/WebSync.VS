@@ -64,6 +64,7 @@
     <Compile Include="Serializers\Mobx\DTO\ComponentInstanceDto.cs" />
     <Compile Include="Serializers\Mobx\DTO\ComponentsContainerDTO.cs" />
     <Compile Include="Serializers\Mobx\DTO\ComponentTypeDto.cs" />
+    <Compile Include="Serializers\Mobx\DTO\PageInstanceDto.cs" />
     <Compile Include="Serializers\Mobx\DTO\Payload.cs" />
     <Compile Include="Serializers\Mobx\DTO\DtoBase.cs" />
     <Compile Include="Serializers\Mobx\DTO\PageTypeDto.cs" />
