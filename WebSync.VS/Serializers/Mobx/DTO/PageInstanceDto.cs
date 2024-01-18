@@ -5,14 +5,14 @@ namespace RoslynSpike.Ember.DTO
 {
     public class PageInstanceDto : DtoBase
     {
-        public String pageType;
-        public String name;
-        public String url;
+        public string pageType;
+        public string name;
+        public string url;
 
         public PageInstanceDto(IPageType pageType) : base(pageType.Id)
         {
             this.pageType = pageType.Id;
-            this.name = this.pageType.Substring(this.pageType.LastIndexOf('.'));
+            this.name = this.pageType.Substring(this.pageType.LastIndexOf('.')+1);
             this.url = "";
         }
     }

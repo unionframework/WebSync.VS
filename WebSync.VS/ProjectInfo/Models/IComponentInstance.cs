@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace RoslynSpike.SessionWeb.Models {
     public interface IComponentInstance : ICodeModelWithId {
+        string ParentId { get; }
         string FieldName { get; }
         string Name { get; }
         Scss.Scss RootSelector { get; }
