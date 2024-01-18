@@ -9,6 +9,8 @@ namespace RoslynSpike.SessionWeb.RoslynModels
     {
         public string BaseComponentTypeId { get; private set; }
 
+        public bool IsCustom { get {  return Type.Name != ReflectionNames.BASE_COMPONENT_TYPE; } }
+
         public RoslynComponentType(INamedTypeSymbol componentType) : base(componentType)
         {
         }
@@ -16,7 +18,7 @@ namespace RoslynSpike.SessionWeb.RoslynModels
         public override void Fill()
         {
             base.Fill();
-            BaseComponentTypeId = Type.Name == ReflectionNames.BASE_COMPONENT_TYPE ? null : Type.BaseType.ToString();
+            BaseComponentTypeId = IsCustom ? null : Type.BaseType.ToString();
         }
 
         public override void SynchronizeTo(IComponentType model)

@@ -9,5 +9,6 @@ namespace RoslynSpike.SessionWeb.Models
     public interface IComponentType : IComponentsContainer
     {
         string BaseComponentTypeId { get; }
+        bool IsCustom { get; }
     }
 }

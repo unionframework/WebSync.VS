@@ -134,7 +134,9 @@ namespace RoslynSpike.SessionWeb
 
         private async Task<IEnumerable<RoslynComponentType>> GetComponentsAsync(Solution solution)
         {
-            var derivedClasses = await GetDerivedClassesAsync(solution, ReflectionNames.BASE_COMPONENT_TYPE);
+            INamedTypeSymbol baseType = await GetTypeByNameAsync(solution, ReflectionNames.BASE_COMPONENT_TYPE);
+            var derivedClasses = (await GetDerivedClassesAsync(solution, baseType)).ToList();
+            derivedClasses.Add(baseType);
             return derivedClasses.Select(dc => {
                 var component = new RoslynComponentType(dc);
                 component.Fill();
@@ -165,6 +167,11 @@ namespace RoslynSpike.SessionWeb
         private async Task<IEnumerable<INamedTypeSymbol>> GetDerivedClassesAsync(Solution solution, string baseClassName)
         {
             INamedTypeSymbol baseType = await GetTypeByNameAsync(solution, baseClassName);
+            return await GetDerivedClassesAsync(solution, baseType);
+        }
+
+        private async Task<IEnumerable<INamedTypeSymbol>> GetDerivedClassesAsync(Solution solution, INamedTypeSymbol baseType)
+        {
             if (baseType != null)
             {
                 return (await SymbolFinder
