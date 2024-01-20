@@ -4,12 +4,12 @@ using WebSocketSharp.Server;
 
 namespace RoslynSpike.BrowserConnection.WebSocket
 {
-    public class SynchronizeBehaviour : WebSocketBehavior
+    public class SyncBehaviour : WebSocketBehavior
     {
         private static readonly NLog.Logger _log = LogManager.GetCurrentClassLogger();
         private readonly WebSocketBrowserConnection _browserConnection;
 
-        public SynchronizeBehaviour(WebSocketBrowserConnection browserConnection)
+        public SyncBehaviour(WebSocketBrowserConnection browserConnection)
         {
             _browserConnection = browserConnection;
         }

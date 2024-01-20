@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Windows.Input;
 using RoslynSpike.Reflection;
 using RoslynSpike.SessionWeb.Models;
 
@@ -14,9 +15,10 @@ namespace RoslynSpike.BrowserConnection
         void Connect();
         void Close();
         bool Connected { get; }
-        event EventHandler<string> ProjectRequested;
-        event EventHandler ProjectNamesRequested;
-        event EventHandler<string> UrlToMatchReceived;
+        //event EventHandler<string> ProjectRequested;
+        //event EventHandler ProjectNamesRequested;
+        //event EventHandler<string> UrlToMatchReceived;
+        event EventHandler<BrowserMessage> BrowserMessageReceived;
         void SendProject(IProjectInfo projectInfo);
         void SendProjectNames(IEnumerable<string> projectNames);
         void SendUrlMatchResult(MatchUrlResult matchUrlResult);

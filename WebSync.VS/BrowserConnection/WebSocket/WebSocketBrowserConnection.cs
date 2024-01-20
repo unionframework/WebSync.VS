@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Windows.Input;
+using EnvDTE;
 using Moq;
 using Newtonsoft.Json;
 using NLog;
@@ -19,14 +21,11 @@ namespace RoslynSpike.BrowserConnection.WebSocket
         private readonly int _serverPort;
         private readonly string _path;
 
-        public event EventHandler<string> ProjectRequested;
-        public event EventHandler ProjectNamesRequested;
-        public event EventHandler<string> UrlToMatchReceived;
         public event EventHandler<BrowserMessage> Broadcasted;
+        public event EventHandler<BrowserMessage> BrowserMessageReceived;
 
         public IProjectInfoSerializer Serializer { get; }
         
-
         public bool Connected => Broadcasted != null && Broadcasted.GetInvocationList().Length > 0;
 
         public WebSocketBrowserConnection(int serverPort, string path, IProjectInfoSerializer serializer)
@@ -51,37 +50,15 @@ namespace RoslynSpike.BrowserConnection.WebSocket
         private WebSocketServer CreateSocketServer(int port, string path)
         {
             var webSocket = new WebSocketServer(port);
-            webSocket.AddWebSocketService(path, () => new SynchronizeBehaviour(this));
+            webSocket.AddWebSocketService(path, () => new SyncBehaviour(this));
             return webSocket;
         }
 
         public void OnMessage(BrowserMessage message)
         {
-            // TODO: parse messages to typed objects
-            switch (message.Type)
-            {
-                case BrowserMessageType.GetProjectNames:
-                    OnProjectNamesRequested();
-                    break;
-                case BrowserMessageType.GetProject:
-                    OnProjectRequested(message.Data as string);
-                    break;
-                case BrowserMessageType.MatchUrl:
-                    OnMatchUrlReceived(message.Data as string);
-                    break;
-                case BrowserMessageType.OpenFile:
-                    // TODO: open file matching the page in browser
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            BrowserMessageReceived?.Invoke(this, message);
         }
 
-        private void OnProjectNamesRequested() => ProjectNamesRequested?.Invoke(this, EventArgs.Empty);
-
-        private void OnProjectRequested(string projectName) => ProjectRequested?.Invoke(this, projectName);
-
-        private void OnMatchUrlReceived(string url) => UrlToMatchReceived?.Invoke(this, url);
 
         public void SendUrlMatchResult(MatchUrlResult matchUrlResult) => OnBroadcasted(BrowserMessage.CreateUrlMatchResultessage(JsonConvert.SerializeObject(matchUrlResult)));
 

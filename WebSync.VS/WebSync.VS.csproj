@@ -51,6 +51,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Sync\Browser\BrowserMessagesHandler.cs" />
+    <Compile Include="Sync\Browser\Commands\AddComponentInstanceCommand.cs" />
+    <Compile Include="Sync\Browser\Commands\StandardCommandResult.cs" />
+    <Compile Include="Sync\Browser\Commands\CommandsBase.cs" />
+    <Compile Include="Sync\Browser\Commands\ICommand.cs" />
+    <Compile Include="Sync\Browser\Commands\MatchUrlCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoslynPackage.cs" />
     <Compile Include="AssemblyProvider\ICompiler.cs" />
@@ -59,7 +65,7 @@
     <Compile Include="Serializers\IProjectInfoSerializer.cs" />
     <Compile Include="BrowserConnection\BrowserMessage.cs" />
     <Compile Include="BrowserConnection\BrowserMessageType.cs" />
-    <Compile Include="BrowserConnection\WebSocket\SynchronizeBehaviour.cs" />
+    <Compile Include="BrowserConnection\WebSocket\SyncBehaviour.cs" />
     <Compile Include="BrowserConnection\WebSocket\WebSocketBrowserConnection.cs" />
     <Compile Include="Serializers\Mobx\DTO\ComponentInstanceDto.cs" />
     <Compile Include="Serializers\Mobx\DTO\ComponentsContainerDTO.cs" />
@@ -103,7 +109,17 @@
     <Compile Include="ProjectInfo\RoslynModels\RoslynService.cs" />
     <Compile Include="ProjectInfo\RoslynModels\RoslynProjectInfo.cs" />
     <Compile Include="ProjectInfo\RoslynProjectInfoProvider.cs" />
-    <Compile Include="WebSync.cs" />
+    <Compile Include="Sync\Browser\Commands\CreateComponentTypeCommand.cs" />
+    <Compile Include="Sync\Browser\Commands\CreatePageTypeCommand.cs" />
+    <Compile Include="Sync\Browser\Commands\CreateWebsiteCommand.cs" />
+    <Compile Include="Sync\Browser\Commands\DeleteComponentInstanceCommand.cs" />
+    <Compile Include="Sync\Browser\Commands\GetProjectCommand.cs" />
+    <Compile Include="Sync\Browser\Commands\GetProjectsCommand.cs" />
+    <Compile Include="Sync\Browser\Commands\OpenFileForClassCommand.cs" />
+    <Compile Include="Sync\Browser\Commands\UpdateComponentInstanceCommand.cs" />
+    <Compile Include="Sync\Browser\Commands\UpdateWebsiteCommand.cs" />
+    <Compile Include="Sync\SyncMediator.cs" />
+    <Compile Include="Sync\Workspace\WorkspaceUpdatesHandler.cs" />
     <Compile Include="Utilities\Extensions\AttributeExtensions.cs" />
     <Compile Include="Utilities\Extensions\EnumExtensions.cs" />
     <Compile Include="Utilities\Extensions\NamespaceExtensions.cs" />
@@ -163,6 +179,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Sync\Browser\Messages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

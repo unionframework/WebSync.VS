@@ -45,7 +45,7 @@ namespace WebSync.VS
         /// </summary>
         public const string PackageGuidString = "46bca1d3-661d-4f59-9da7-7e7e3318e176";
 
-        private WebSync _webSync;
+        private SyncMediator _webSync;
         //private SelectorsConverter _selectorsConverter;
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace WebSync.VS
             var workspace = componentModel.GetService<VisualStudioWorkspace>();
 
             var browserConnection = CreateBrowserConnection();
-            _webSync = new WebSync(
+            _webSync = new SyncMediator(
                 workspace, 
                 browserConnection, 
                 new RoslynProjectInfoProvider(workspace),
