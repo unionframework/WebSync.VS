@@ -13,7 +13,8 @@ namespace RoslynSpike.SessionWeb.RoslynModels {
         public Scss.Scss RootSelector { get; private set; }
         public string ComponentType { get; private set; }
         public string ParentId { get; }
-        public IEnumerable<string> ConstructorParams { get; set; }
+        public IEnumerable<object> ConstructorArguments { get; private set; }
+        public IDictionary<string, object> NamedArguments { get; private set; }
 
         protected ISymbol symbol;
         protected AttributeData Attr;
@@ -27,29 +28,23 @@ namespace RoslynSpike.SessionWeb.RoslynModels {
             Attr = attr;
         }
 
-        public override void Fill() {
-            try {
+        public override void Fill()
+        {
+            try
+            {
                 RootSelector = ScssBuilder.Create(GetRootScss());
             }
-            catch (InvalidScssException) {
+            catch (InvalidScssException)
+            {
                 RootSelector = null;
             }
-            
+
             Name = GetName();
             ComponentType = GetTypeName();
             FieldName = GetFieldName();
             Id = GenerateId(ParentId, FieldName);
-            ConstructorParams = GetParams();
-        }
-
-        public List<string> GetParams()
-        {
-            var constructorArguments = Attr.GetAttributeConstructorArguments();
-            if (constructorArguments.Count > 0)
-            {
-                constructorArguments.RemoveAt(0);
-            }
-            return constructorArguments;
+            ConstructorArguments = Attr.GetAttributeConstructorArguments();
+            NamedArguments = Attr.GetAttributeNamedArguments();
         }
 
         protected virtual string GetFieldName() {

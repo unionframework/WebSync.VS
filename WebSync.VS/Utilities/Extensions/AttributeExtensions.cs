@@ -12,10 +12,17 @@ namespace RoslynSpike.Utilities.Extensions
             return filteredList.Count == 0 ? null : filteredList.First().Value.Value.ToString();
         }
 
+        public static IDictionary<string, object> GetAttributeNamedArguments(this AttributeData attribute) =>
+            attribute.NamedArguments.Aggregate(new Dictionary<string, object>(), (d, kvp) =>
+            {
+                d.Add(kvp.Key, kvp.Value);
+                return d;
+            });
+
         public static List<string> GetAttributeConstructorArguments(this AttributeData attribute)
         {
             return attribute.ConstructorArguments
-                .Select(ca => ca.Value?.ToString())
+                .Select(ca => ca.Values[0].Value.ToString())
                 .Where(ca => ca != null).ToList();
         }
     }

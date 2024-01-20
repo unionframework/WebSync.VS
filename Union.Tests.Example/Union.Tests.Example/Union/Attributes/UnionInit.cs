@@ -8,10 +8,17 @@ namespace Union.Attributes
 {
     internal class UnionInitAttribute: Attribute
     {
-        public string Xcss;
-        public UnionInitAttribute(string xcss)
+        public object[] Args { get; }
+        public string ComponentName { get; set; }
+        public string FrameXcss { get; set; }
+
+        public UnionInitAttribute()
         {
-            Xcss = xcss;
+        }
+
+        public UnionInitAttribute(params object[] args)
+        {
+            Args = args;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Union.Tests.Example.Services.StackOverflow
         [UnionInit(".title")]
         public UnionElement Title;
 
-        [UnionInit(".title")]
+        [UnionInit(".question-body")]
         public UnionElement Body;
     }
 }
