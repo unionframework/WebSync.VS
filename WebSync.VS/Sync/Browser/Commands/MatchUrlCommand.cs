@@ -4,6 +4,7 @@ using RoslynSpike.Reflection;
 using System;
 using System.Threading.Tasks;
 using WebSync.VS.BrowserConnection.Commands;
+using WebSync.VS.Sync;
 
 namespace RoslynSpike.BrowserConnection.WebSocket
 {
@@ -16,7 +17,7 @@ namespace RoslynSpike.BrowserConnection.WebSocket
             _assemblyProvider = assemblyProvider;
         }
 
-        public override Task<StandardCommandResult> ExecuteAsync()
+        public override Task<VSMessage> ExecuteAsync()
         {
             try
             {
@@ -29,7 +30,7 @@ namespace RoslynSpike.BrowserConnection.WebSocket
                     //LogInfo($"Compiled successfully.");
                     var urlMatcher = new UrlMatcher(assemblies.Item1, assemblies.Item2);
                     var matchUrlResult = urlMatcher.Match(url);
-                    return Task.FromResult(new StandardCommandResult());
+                    return Task.FromResult(new VSMessage(VSMessageType.UrlMatchResult, matchUrlResult));
                     //LogInfo($"Matched successfully: {matchUrlResult.ServiceId}-{matchUrlResult.PageId}");
                     //_browserConnection.SendUrlMatchResult(matchUrlResult);
                     //if (!string.IsNullOrWhiteSpace(matchUrlResult.PageId))
@@ -37,7 +38,7 @@ namespace RoslynSpike.BrowserConnection.WebSocket
                     //    OpenDocumentWithType(matchUrlResult.PageId);
                     //}
                 }
-                return Task.FromResult(new StandardCommandResult());
+                return Task.FromResult(new VSErrorMessage(VSMessageType.UrlMatchResult, "Unable to match URL") as VSMessage);
             }
             catch (Exception e)
             {
@@ -49,9 +50,8 @@ namespace RoslynSpike.BrowserConnection.WebSocket
                 //    LogInfo(e.InnerException.Message);
                 //    LogInfo(e.InnerException.StackTrace);
                 //}
-                return Task.FromResult(new StandardCommandResult());
+                return Task.FromResult(new VSErrorMessage(VSMessageType.UrlMatchResult, e.Message) as VSMessage);
             }
-
         }
     }
 }

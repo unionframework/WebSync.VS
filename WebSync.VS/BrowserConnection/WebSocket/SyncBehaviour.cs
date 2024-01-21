@@ -1,10 +1,11 @@
+using Newtonsoft.Json;
 using NLog;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 
 namespace RoslynSpike.BrowserConnection.WebSocket
 {
-    public class SyncBehaviour : WebSocketBehavior
+    internal class SyncBehaviour : WebSocketBehavior
     {
         private static readonly NLog.Logger _log = LogManager.GetCurrentClassLogger();
         private readonly WebSocketBrowserConnection _browserConnection;
@@ -29,9 +30,9 @@ namespace RoslynSpike.BrowserConnection.WebSocket
             _log.Error(e.Exception, e.Message);
         }
 
-        private void _browserConnection_Broadcasted(object sender, BrowserMessage e)
+        private void _browserConnection_Broadcasted(object sender, VSMessage message)
         {
-            Sessions.Broadcast(e.Serialize());
+            Sessions.Broadcast(JsonConvert.SerializeObject(message));
         }
 
         protected override void OnMessage(MessageEventArgs e)

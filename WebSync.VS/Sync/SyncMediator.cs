@@ -11,7 +11,7 @@ using WebSync.VS.Sync.Workspace;
 
 namespace WebSync.VS
 {
-    public class SyncMediator
+    internal class SyncMediator
     {
         private static Logger _log = LogManager.GetCurrentClassLogger();
         private readonly Workspace _workspace;
@@ -38,8 +38,8 @@ namespace WebSync.VS
 
         private async void _browserConnection_BrowserMessageReceived(object sender, BrowserMessage e)
         {
-            // TODO: send command result
-            await _messagesHandler.HandleAsync(e);
+            var vsMessage = await _messagesHandler.HandleAsync(e);
+            _browserConnection.Broadcast(vsMessage);
         }
 
         private void _workspace_WorkspaceChanged(object sender, WorkspaceChangeEventArgs e)
@@ -86,17 +86,17 @@ namespace WebSync.VS
             }
         }
 
-        private async void CollectAndSynchronizeChanges()
-        {
-            IEnumerable<IProjectInfo> projects = await _projectInfoProvider.GetProjectInfoAsync(false);
-            SynchronizeProjectInfo(projects);
-        }
+        //private async void CollectAndSynchronizeChanges()
+        //{
+        //    IEnumerable<IProjectInfo> projects = await _projectInfoProvider.GetProjectInfoAsync(false);
+        //    SynchronizeProjectInfo(projects);
+        //}
 
         private void SynchronizeProjectInfo(IEnumerable<IProjectInfo> projects)
         {
             //var pageType = sessionWebs.First().PageTypes["km.tests.selenium.services.kmNewUI.Pages.EndUser.Search.SearchPageBase"];
             // . Currently, there is only one
-            _browserConnection.SendProject(projects.First());
+            //_browserConnection.SendProject(projects.First());
             _projects = projects;
         }
     }

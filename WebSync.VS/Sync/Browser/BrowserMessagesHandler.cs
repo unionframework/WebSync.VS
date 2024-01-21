@@ -5,6 +5,7 @@ using RoslynSpike.SessionWeb;
 using System;
 using System.Threading.Tasks;
 using WebSync.VS.BrowserConnection.Commands;
+using WebSync.VS.Serializers.Mobx;
 
 namespace WebSync.VS.Sync
 {
@@ -21,7 +22,7 @@ namespace WebSync.VS.Sync
             _projectInfoProvider = projectInfoProvider;
         }
 
-        public async Task<StandardCommandResult> HandleAsync(BrowserMessage message)
+        public async Task<VSMessage> HandleAsync(BrowserMessage message)
         {
             var command = GetCommand(message);
             return await command.ExecuteAsync();
@@ -38,7 +39,7 @@ namespace WebSync.VS.Sync
                 case BrowserMessageType.GetProjectNames:
                     return new GetProjectsCommand(_solution,message.Data);
                 case BrowserMessageType.GetProject:
-                    return new GetProjectCommand(_solution,_projectInfoProvider, message.Data);
+                    return new GetProjectCommand(_solution,_projectInfoProvider, new MobxProjectInfoSerializer(), message.Data);
                 case BrowserMessageType.DeleteWebsite:
                     return null;
                 case BrowserMessageType.UpdateWebsite:

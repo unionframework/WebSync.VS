@@ -75,7 +75,7 @@
     <Compile Include="Serializers\Mobx\DTO\DtoBase.cs" />
     <Compile Include="Serializers\Mobx\DTO\PageTypeDto.cs" />
     <Compile Include="Serializers\Mobx\DTO\ServiceDto.cs" />
-    <Compile Include="Serializers\Mobx\MobxSerializer.cs" />
+    <Compile Include="Serializers\Mobx\MobxProjectInfoSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\UrlMatcher.cs" />
     <Compile Include="RoslynPackage.cs" />
@@ -118,6 +118,7 @@
     <Compile Include="Sync\Browser\Commands\OpenFileForClassCommand.cs" />
     <Compile Include="Sync\Browser\Commands\UpdateComponentInstanceCommand.cs" />
     <Compile Include="Sync\Browser\Commands\UpdateWebsiteCommand.cs" />
+    <Compile Include="Sync\VSMessageType.cs" />
     <Compile Include="Sync\SyncMediator.cs" />
     <Compile Include="Sync\Workspace\WorkspaceUpdatesHandler.cs" />
     <Compile Include="Utilities\Extensions\AttributeExtensions.cs" />

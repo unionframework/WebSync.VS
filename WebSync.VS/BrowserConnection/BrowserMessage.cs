@@ -35,11 +35,5 @@ namespace RoslynSpike.BrowserConnection
                 throw;
             }
         }
-
-        public static BrowserMessage CreateProjectNamesMessage(IEnumerable<string> data) => new BrowserMessage(BrowserMessageType.ProjectNames, data);
-        
-        public static BrowserMessage CreateProjectMessage(object projectInfo) => new BrowserMessage(BrowserMessageType.Project, projectInfo);
-
-        public static BrowserMessage CreateUrlMatchResultessage(string data) => new BrowserMessage(BrowserMessageType.UrlMatchResult, data);
     }
 }

@@ -97,7 +97,7 @@ namespace WebSync.VS
                 //#if !DEBUG
                 //                var connection = new WebSocketBrowserConnection(18000, "/websync", new EmberSerializer());
                 //#else
-                var connection = new WebSocketBrowserConnection(1804, "/websync", new MobxSerializer());
+                var connection = new WebSocketBrowserConnection(1804, "/websync");
                 //#endif
 
                 connection.Connect();

@@ -5,6 +5,6 @@ namespace WebSync.VS.BrowserConnection.Commands
 {
     internal interface ICommand
     {
-        Task<StandardCommandResult> ExecuteAsync();
+        Task<VSMessage> ExecuteAsync();
     }
 }

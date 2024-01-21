@@ -15,6 +15,6 @@ namespace WebSync.VS.BrowserConnection.Commands
             Data = data;
         }
 
-        public abstract Task<StandardCommandResult> ExecuteAsync();
+        public abstract Task<VSMessage> ExecuteAsync();
     }
 }

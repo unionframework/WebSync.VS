@@ -7,15 +7,11 @@ namespace RoslynSpike.BrowserConnection
     public enum BrowserMessageType
     {
         MatchUrl,
-        UrlMatchResult,
-
         OpenFile,
 
         // Project
         GetProjectNames,
-        ProjectNames,
         GetProject,
-        Project,
 
         // Website
         CreateWebsite,

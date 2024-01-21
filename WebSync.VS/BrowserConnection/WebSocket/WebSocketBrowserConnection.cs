@@ -1,38 +1,29 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Windows.Input;
-using EnvDTE;
 using Moq;
-using Newtonsoft.Json;
 using NLog;
 using NUnit.Framework;
-using RoslynSpike.Reflection;
-using RoslynSpike.SessionWeb.Models;
 using WebSocketSharp.Server;
 
 namespace RoslynSpike.BrowserConnection.WebSocket
 {
-    public class WebSocketBrowserConnection : IBrowserConnection
+    internal class WebSocketBrowserConnection : IBrowserConnection
     {
-        private static NLog.Logger _log = LogManager.GetCurrentClassLogger();
+        private static Logger _log = LogManager.GetCurrentClassLogger();
 
         private WebSocketServer _webSocketServer;
         private readonly int _serverPort;
         private readonly string _path;
 
-        public event EventHandler<BrowserMessage> Broadcasted;
+        public event EventHandler<VSMessage> Broadcasted;
         public event EventHandler<BrowserMessage> BrowserMessageReceived;
-
-        public IProjectInfoSerializer Serializer { get; }
         
         public bool Connected => Broadcasted != null && Broadcasted.GetInvocationList().Length > 0;
 
-        public WebSocketBrowserConnection(int serverPort, string path, IProjectInfoSerializer serializer)
+        public WebSocketBrowserConnection(int serverPort, string path)
         {
             _serverPort = serverPort;
             _path = path;
-            Serializer = serializer;
         }
 
         public void Connect() {
@@ -59,27 +50,14 @@ namespace RoslynSpike.BrowserConnection.WebSocket
             BrowserMessageReceived?.Invoke(this, message);
         }
 
-
-        public void SendUrlMatchResult(MatchUrlResult matchUrlResult) => OnBroadcasted(BrowserMessage.CreateUrlMatchResultessage(JsonConvert.SerializeObject(matchUrlResult)));
-
         public void Close()
         {
             _webSocketServer.Stop();
         }
 
-        protected virtual void OnBroadcasted(BrowserMessage msg)
+        public void Broadcast(VSMessage message)
         {
-            Broadcasted?.Invoke(this, msg);
-        }
-
-        public void SendProject(IProjectInfo projectInfo)
-        {
-            OnBroadcasted(BrowserMessage.CreateProjectMessage(Serializer.Serialize(projectInfo)));
-        }
-
-        public void SendProjectNames(IEnumerable<string> projectNames)
-        {
-            OnBroadcasted(BrowserMessage.CreateProjectNamesMessage(projectNames));
+            Broadcasted?.Invoke(this, message);
         }
     }
 
@@ -91,8 +69,7 @@ namespace RoslynSpike.BrowserConnection.WebSocket
         [SetUp]
         public void SetUp()
         {
-            var serializerMoq = new Mock<IProjectInfoSerializer>();
-            _connection = new WebSocketBrowserConnection(18488, "synchronize", serializerMoq.Object);
+            _connection = new WebSocketBrowserConnection(18488, "synchronize");
         }
 
         [Test]

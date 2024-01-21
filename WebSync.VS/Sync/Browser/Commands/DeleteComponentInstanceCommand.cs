@@ -11,7 +11,7 @@ namespace WebSync.VS.Sync
         {
         }
 
-        public override Task<StandardCommandResult> ExecuteAsync()
+        public override Task<VSMessage> ExecuteAsync()
         {
             throw new System.NotImplementedException();
         }
