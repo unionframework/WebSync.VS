@@ -6,7 +6,7 @@ namespace WebSync.VS.Sync
     [JsonConverter(typeof(StringEnumConverter))]
     public enum VSMessageType
     {
-        UrlMatchResult,
+        UrlMatchResponse,
         ProjectNames,
         Project
     }

@@ -11,13 +11,15 @@ namespace WebSync.VS.Sync
 {
     internal class BrowserMessagesHandler
     {
+        private Microsoft.CodeAnalysis.Workspace _workspace;
         private Microsoft.CodeAnalysis.Solution _solution;
         private IAssemblyProvider _assemblyProvider;
         private IProjectInfoPovider _projectInfoProvider;
 
-        public BrowserMessagesHandler(Microsoft.CodeAnalysis.Solution solution, IAssemblyProvider assemblyProvider, IProjectInfoPovider projectInfoProvider)
+        public BrowserMessagesHandler(Microsoft.CodeAnalysis.Workspace workspace, IAssemblyProvider assemblyProvider, IProjectInfoPovider projectInfoProvider)
         {
-            _solution = solution;
+            _workspace = workspace;
+            _solution = workspace.CurrentSolution;
             _assemblyProvider = assemblyProvider;
             _projectInfoProvider = projectInfoProvider;
         }
@@ -35,11 +37,11 @@ namespace WebSync.VS.Sync
                 case BrowserMessageType.MatchUrl:
                     return new MatchUrlCommand(_solution, _assemblyProvider,  message.Data);
                 case BrowserMessageType.OpenFile:
-                    return new OpenFileForClassCommand(_solution, message.Data);
+                    return new OpenFileForClassCommand(_workspace, message.Data);
                 case BrowserMessageType.GetProjectNames:
                     return new GetProjectsCommand(_solution,message.Data);
                 case BrowserMessageType.GetProject:
-                    return new GetProjectCommand(_solution,_projectInfoProvider, new MobxProjectInfoSerializer(), message.Data);
+                    return new GetProjectCommand(_solution, _projectInfoProvider, new MobxProjectInfoSerializer(), message.Data);
                 case BrowserMessageType.DeleteWebsite:
                     return null;
                 case BrowserMessageType.UpdateWebsite:

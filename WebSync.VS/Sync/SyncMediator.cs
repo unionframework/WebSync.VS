@@ -29,7 +29,7 @@ namespace WebSync.VS
             _browserConnection = browserConnection;
             _projectInfoProvider = projectInfoProvider;
             _assemblyProvider = assemblyProvider;
-            _messagesHandler = new BrowserMessagesHandler(_workspace.CurrentSolution, _assemblyProvider, _projectInfoProvider);
+            _messagesHandler = new BrowserMessagesHandler(_workspace, _assemblyProvider, _projectInfoProvider);
             _workspaceUpdatesHandler = new WorkspaceUpdatesHandler();
 
             _browserConnection.BrowserMessageReceived += _browserConnection_BrowserMessageReceived;
