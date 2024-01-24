@@ -9,7 +9,7 @@ namespace Union.Tests.Example.Services.StackOverflow
 {
     internal class QuestionPage:UnionPage
     {
-        [UnionInit(".title")]
+        [UnionInit(".updated")]
         public UnionElement Title;
 
         [UnionInit(".question-body")]

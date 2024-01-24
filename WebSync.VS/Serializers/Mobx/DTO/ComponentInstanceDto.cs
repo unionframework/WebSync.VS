@@ -17,13 +17,14 @@ namespace RoslynSpike.Ember.DTO
 
     public class ComponentInstanceDto : DtoBase
     {
-        public string parentId { get; }
-        public string componentTypeId { get; }
-        public string name { get; }
-        public object rootSelector { get; }
+        public string parentId;
+        public string componentTypeId;
+        public string name;
         public InitializationAttributeDto initializationAttribute;
         public int fieldIndex;
         public string fieldName;
+
+        public ComponentInstanceDto():base(null) { }
 
         public ComponentInstanceDto(IComponentInstance component) : base(component.Id)
         {

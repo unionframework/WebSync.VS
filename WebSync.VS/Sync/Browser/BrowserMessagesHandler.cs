@@ -62,7 +62,7 @@ namespace WebSync.VS.Sync
                     return new AddComponentInstanceCommand(_solution,message.Data);
                 case BrowserMessageType.DeleteComponentInstance:
                     return new DeleteComponentInstanceCommand(_solution,message.Data);
-                case BrowserMessageType.UpdateCompoenentInstance:
+                case BrowserMessageType.UpdateComponentInstance:
                     return new UpdateComponentInstanceCommand(_solution, message.Data);
                 default:
                     throw new ArgumentOutOfRangeException(message.Type.ToString());

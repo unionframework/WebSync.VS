@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
@@ -24,6 +25,12 @@ namespace RoslynSpike.Utilities.Extensions
             return attribute.ConstructorArguments
                 .Select(ca => ca.Values[0].Value.ToString())
                 .Where(ca => ca != null).ToList();
+        }
+
+        public static AttributeData GetAttributeOfType(this ISymbol field, string attributeTypeName)
+        {
+            var weAttrs = field.GetAttributes().Where(a => a.AttributeClass.Name == attributeTypeName).ToList();
+            return weAttrs.Count == 1 ? weAttrs.First() : null;
         }
     }
 }

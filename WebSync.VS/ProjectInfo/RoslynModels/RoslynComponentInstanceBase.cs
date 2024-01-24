@@ -18,10 +18,19 @@ namespace RoslynSpike.SessionWeb.RoslynModels {
 
         protected ISymbol symbol;
         protected AttributeData Attr;
+        protected bool isField;
 
         protected RoslynComponentInstanceBase(string parentId, ISymbol symbol, AttributeData attr) {
             ParentId = parentId;
-            if (!(symbol is IFieldSymbol) && !(symbol is IPropertySymbol)) {
+            if (symbol is IFieldSymbol) {
+                isField = true;
+            }
+            else if(symbol is IPropertySymbol)
+            {
+                isField = false;
+            }
+            else
+            {
                 throw new ArgumentException("Symbol is neither field nor property.");
             }
             this.symbol = symbol;
