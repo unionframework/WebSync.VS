@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Sync\Browser\BrowserMessagesHandler.cs" />
     <Compile Include="Sync\Browser\Commands\AddComponentInstanceCommand.cs" />
+    <Compile Include="Sync\Browser\Commands\ComponentInstanceMessage.cs" />
     <Compile Include="Sync\Browser\Commands\StandardCommandResult.cs" />
     <Compile Include="Sync\Browser\Commands\CommandsBase.cs" />
     <Compile Include="Sync\Browser\Commands\ICommand.cs" />

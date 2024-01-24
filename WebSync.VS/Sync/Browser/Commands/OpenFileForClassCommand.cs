@@ -29,27 +29,27 @@ namespace WebSync.VS.Sync
 
         public override Task<VSMessage> ExecuteAsync()
         {
-            //OpenFileMessage openFileMessage = JsonConvert.DeserializeObject<OpenFileMessage>(JsonConvert.SerializeObject(Data));
-            //Microsoft.VisualStudio.Shell.ThreadHelper.Generic.Invoke(() =>
-            //{
-            //    foreach (var project in _workspace.CurrentSolution.Projects)
-            //    {
-            //        var typeByMetadataName =
-            //            project.GetCompilationAsync().Result.GetTypeByMetadataName(openFileMessage.fullClassName);
-            //        if (typeByMetadataName != null)
-            //        {
-            //            var location = typeByMetadataName.Locations.First();
-            //            var documentFilePath = location.SourceTree.FilePath;
-            //            var documentIdsWithFilePath =
-            //                _workspace.CurrentSolution.GetDocumentIdsWithFilePath(documentFilePath);
-            //            if (documentIdsWithFilePath.Length > 0)
-            //            {
-            //                _workspace.OpenDocument(documentIdsWithFilePath.First());
-            //                break;
-            //            }
-            //        }
-            //    }
-            //});
+            OpenFileMessage openFileMessage = JsonConvert.DeserializeObject<OpenFileMessage>(JsonConvert.SerializeObject(Data));
+            Microsoft.VisualStudio.Shell.ThreadHelper.Generic.Invoke(() =>
+            {
+                foreach (var project in _workspace.CurrentSolution.Projects)
+                {
+                    var typeByMetadataName =
+                        project.GetCompilationAsync().Result.GetTypeByMetadataName(openFileMessage.fullClassName);
+                    if (typeByMetadataName != null)
+                    {
+                        var location = typeByMetadataName.Locations.First();
+                        var documentFilePath = location.SourceTree.FilePath;
+                        var documentIdsWithFilePath =
+                            _workspace.CurrentSolution.GetDocumentIdsWithFilePath(documentFilePath);
+                        if (documentIdsWithFilePath.Length > 0)
+                        {
+                            _workspace.OpenDocument(documentIdsWithFilePath.First());
+                            break;
+                        }
+                    }
+                }
+            });
             return Task.FromResult((VSMessage)null);
         }
     }

@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
 using Newtonsoft.Json;
 using RoslynSpike.BrowserConnection.WebSocket;
-using RoslynSpike.Ember.DTO;
 using RoslynSpike.SessionWeb;
 using RoslynSpike.SessionWeb.Models;
 using RoslynSpike.Utilities.Extensions;
@@ -16,20 +15,19 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace WebSync.VS.Sync
 {
-    public class UpdateComponentInstanceMessage : ProjectMessage
-    {
-        public ComponentInstanceDto componentInstance;
-    }
-
     internal class UpdateComponentInstanceCommand : CommandBase
     {
-        public UpdateComponentInstanceCommand(Solution solution, object data) : base(solution, data)
+        Microsoft.CodeAnalysis.Workspace _workspace;
+
+        public UpdateComponentInstanceCommand(Microsoft.CodeAnalysis.Workspace workspace, object data) : base(workspace.CurrentSolution, data)
         {
+            _workspace = workspace;
         }
 
         public async override Task<VSMessage> ExecuteAsync()
         {
-            var message = JsonConvert.DeserializeObject<UpdateComponentInstanceMessage>(JsonConvert.SerializeObject(Data));
+            var message = JsonConvert.DeserializeObject<ComponentInstanceMessage>(JsonConvert.SerializeObject(Data));
+            var newSelector = message.componentInstance.fieldName; //message.componentInstance.initializationAttribute.constructorArguments.First().ToString();
             var project = Solution.Projects.FirstOrDefault(p => p.Name == message.projectName);
             if (project == null)
             {
@@ -42,18 +40,18 @@ namespace WebSync.VS.Sync
             var attributeSyntax = await attribute.ApplicationSyntaxReference.GetSyntaxAsync();
 
             var newArgumentSyntax = AttributeArgument(
-                LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(".updated")));
+                LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(newSelector)));
             var argumentSyntax = attributeSyntax.DescendantNodes().OfType<AttributeArgumentSyntax>().First();
             var rootSyntax = await attributeSyntax.SyntaxTree.GetRootAsync();
             var newRootSyntax = rootSyntax.ReplaceNode(argumentSyntax, newArgumentSyntax);
 
             var document = project.GetDocument(attributeSyntax.SyntaxTree);
+            var text = newRootSyntax.GetText();
             var newDocument = document.WithText(newRootSyntax.GetText());
 
             Microsoft.VisualStudio.Shell.ThreadHelper.Generic.Invoke(() =>
             {
-                Solution.Workspace.CanApplyChange(ApplyChangesKind.ChangeDocument);
-                var updated = Solution.Workspace.TryApplyChanges(newDocument.Project.Solution);
+                var updated = _workspace.TryApplyChanges(newDocument.Project.Solution);
             });
             return null;
         }
