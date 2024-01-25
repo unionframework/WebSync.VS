@@ -6,8 +6,8 @@
         public const string BASE_COMPONENT_TYPE = "UnionElement";
 
         public const string BASE_SERVICE_TYPE_FULL_NAME = "IUnionService";
-        public const string BASE_PAGE_INTERFACE_FULL_NAME = "IUnionPage";
-        public const string BASE_COMPONENT_INTERFACE_FULL_NAME = "IUnionElement";
+        public const string BASE_PAGE_INTERFACE_FULL_NAME = "Union.Interfaces.IUnionPage";
+        public const string BASE_COMPONENT_INTERFACE_FULL_NAME = "Union.Interfaces.IUnionElement";
 
         public const string WEB_ELEMENT_ATTRRIBUTE = "SimpleWebComponentAttribute";
         public const string AUTOINIT_ATTRRIBUTE = "UnionInitAttribute";

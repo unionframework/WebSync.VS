@@ -20,7 +20,6 @@ namespace RoslynSpike.SessionWeb
     public class RoslynProjectInfoProvider:IProjectInfoPovider
     {
         private readonly VisualStudioWorkspace _workspace;
-        private IEnumerable<IProjectInfo> _cachedSessionWebs;
 
         public RoslynProjectInfoProvider(VisualStudioWorkspace workspace)
         {
@@ -29,8 +28,8 @@ namespace RoslynSpike.SessionWeb
 
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public async Task<IEnumerable<IProjectInfo>> GetProjectInfoAsync(bool useCache) {
-            if (_cachedSessionWebs == null || !useCache) {
+        public async Task<IProjectInfo> GetProjectInfoAsync(bool useCache) {
+            //if (_cachedSessionWebs == null || !useCache) {
                 try {
                     var solution = _workspace.CurrentSolution;
                     var services = await GetServicesAsync(solution);
@@ -39,19 +38,19 @@ namespace RoslynSpike.SessionWeb
 
                     // . for now, we unable to extract sessions, so everything is store in one session
                     var roslynProjectInfo = new RoslynProjectInfo(Path.GetFileNameWithoutExtension(solution.FilePath), services, components, pages);
-                    var projectInfoList = new List<IProjectInfo> {roslynProjectInfo};
-                    CacheWebInfo(projectInfoList);
-                    return projectInfoList;
+                    //var projectInfoList = new List<IProjectInfo> {roslynProjectInfo};
+                    //CacheWebInfo(projectInfoList);
+                    return roslynProjectInfo;
                 }
                 catch (Exception ex) {
                     _log.Error(ex, "Unable to collect selenium contexts");
                     throw;
                 }
-            }
-            return _cachedSessionWebs;
+            //}
+            //return _cachedSessionWebs;
         }
 
-        public async Task<bool> UpdateProjectsAsync(IProjectInfo webInfo, DocumentId changedDocumentId)
+        public async Task<bool> UpdateProjectsAsync(IProjectInfo projectInfo, DocumentId changedDocumentId)
         {
             try
             {
@@ -68,7 +67,7 @@ namespace RoslynSpike.SessionWeb
                 var components = GetComppnents(typesInDocument);
                 if (pages.Any() || components.Any())
                 {
-                    UpdateCachedSessionWebs(pages, components);
+                    UpdateProjectInfo(projectInfo, pages, components);
                     return true;
                 }
 
@@ -81,40 +80,31 @@ namespace RoslynSpike.SessionWeb
             }
         }
 
-        private void CacheWebInfo(List<IProjectInfo> sessionWebs) {
-            _cachedSessionWebs = sessionWebs;
-        }
-
-        private IEnumerable<IProjectInfo> UpdateCachedSessionWebs(IEnumerable<RoslynPageType> pageTypes, IEnumerable<RoslynComponentType> componentTypes) {
-            // TODO: For now we have only one
-            var sessionWeb = _cachedSessionWebs.First();
-
+        private void UpdateProjectInfo(IProjectInfo projectInfo, IEnumerable<RoslynPageType> pageTypes, IEnumerable<RoslynComponentType> componentTypes) {
             // Update PageTypes
             foreach (var roslynPageType in pageTypes) {
-                if (sessionWeb.PageTypes.ContainsKey(roslynPageType.Id)) {
-                    sessionWeb.PageTypes[roslynPageType.Id] = roslynPageType;
+                if (projectInfo.PageTypes.ContainsKey(roslynPageType.Id)) {
+                    projectInfo.PageTypes[roslynPageType.Id] = roslynPageType;
                 }
                 else {
-                    sessionWeb.PageTypes.Add(roslynPageType.Id, roslynPageType);
+                    projectInfo.PageTypes.Add(roslynPageType.Id, roslynPageType);
                 }
             }
 
             // Update ComponentTypes
             foreach (var roslynComponentType in componentTypes) {
-                if (sessionWeb.ComponentTypes.ContainsKey(roslynComponentType.Id)) {
-                    sessionWeb.ComponentTypes[roslynComponentType.Id] = roslynComponentType;
+                if (projectInfo.ComponentTypes.ContainsKey(roslynComponentType.Id)) {
+                    projectInfo.ComponentTypes[roslynComponentType.Id] = roslynComponentType;
                 }
                 else {
-                    sessionWeb.ComponentTypes.Add(roslynComponentType.Id, roslynComponentType);
+                    projectInfo.ComponentTypes.Add(roslynComponentType.Id, roslynComponentType);
                 }
             }
-
-            return _cachedSessionWebs;
         }
 
         public IEnumerable<RoslynComponentType> GetComppnents(IEnumerable<INamedTypeSymbol> types) {
             return types
-                .Where(t => t.AllInterfaces.Any(i => i.GetFullTypeName() == ReflectionNames.BASE_COMPONENT_INTERFACE_FULL_NAME))
+                .Where(t => t.AllInterfaces.Any(i =>i.GetFullTypeName() == ReflectionNames.BASE_COMPONENT_INTERFACE_FULL_NAME))
                 .Select(dc => {
                     var page = new RoslynComponentType(dc);
                     page.Fill();
@@ -124,7 +114,7 @@ namespace RoslynSpike.SessionWeb
 
         public IEnumerable<RoslynPageType> GetPages(IEnumerable<INamedTypeSymbol> types) {
             return types
-                .Where(t => t.AllInterfaces.Any(i => i.GetFullTypeName() == ReflectionNames.BASE_PAGE_INTERFACE_FULL_NAME))
+                .Where(t => t.AllInterfaces.Any(i =>i.GetFullTypeName() == ReflectionNames.BASE_PAGE_INTERFACE_FULL_NAME))
                 .Select(dc => {
                     var page = new RoslynPageType(dc);
                     page.Fill();

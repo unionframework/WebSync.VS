@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using NLog;
 using RoslynSpike.BrowserConnection;
+using RoslynSpike.BrowserConnection.WebSocket;
 using RoslynSpike.Compiler;
 using RoslynSpike.SessionWeb;
-using RoslynSpike.SessionWeb.Models;
+using WebSync.VS.ProjectInfo;
 using WebSync.VS.Sync;
 using WebSync.VS.Sync.Workspace;
 
@@ -18,18 +17,25 @@ namespace WebSync.VS
         private readonly IBrowserConnection _browserConnection;
         private readonly IProjectInfoPovider _projectInfoProvider;
         private readonly IAssemblyProvider _assemblyProvider;
-        private IEnumerable<IProjectInfo> _projects;
+        private readonly ProjectInfoCache _projectInfoCache;
+        private readonly IProjectInfoSerializer _projectInfoSerializer;
         private BrowserMessagesHandler _messagesHandler;
         private WorkspaceUpdatesHandler _workspaceUpdatesHandler;
 
-        public SyncMediator(Workspace workspace, IBrowserConnection browserConnection,
-            IProjectInfoPovider projectInfoProvider, IAssemblyProvider assemblyProvider)
+        public SyncMediator(Workspace workspace, 
+            IBrowserConnection browserConnection,
+            IProjectInfoPovider projectInfoProvider, 
+            ProjectInfoCache projectInfoCache,
+            IProjectInfoSerializer projectInfoSerializer,
+            IAssemblyProvider assemblyProvider)
         {
             _workspace = workspace;
             _browserConnection = browserConnection;
             _projectInfoProvider = projectInfoProvider;
+            _projectInfoSerializer = projectInfoSerializer;
             _assemblyProvider = assemblyProvider;
-            _messagesHandler = new BrowserMessagesHandler(_workspace, _assemblyProvider, _projectInfoProvider);
+            _projectInfoCache = projectInfoCache;
+            _messagesHandler = new BrowserMessagesHandler(_workspace, _assemblyProvider, _projectInfoProvider, _projectInfoCache, _projectInfoSerializer);
             _workspaceUpdatesHandler = new WorkspaceUpdatesHandler();
 
             _browserConnection.BrowserMessageReceived += _browserConnection_BrowserMessageReceived;
@@ -38,8 +44,11 @@ namespace WebSync.VS
 
         private async void _browserConnection_BrowserMessageReceived(object sender, BrowserMessage e)
         {
-            var vsMessage = await _messagesHandler.HandleAsync(e);
-            _browserConnection.Broadcast(vsMessage);
+            var responseMessage = await _messagesHandler.HandleAsync(e);
+            if (responseMessage != null)
+            {
+                _browserConnection.Broadcast(responseMessage);
+            }
         }
 
         private void _workspace_WorkspaceChanged(object sender, WorkspaceChangeEventArgs e)
@@ -77,27 +86,15 @@ namespace WebSync.VS
 
         private async void CollectAndSynchronizeChanges(DocumentId documentId)
         {
-            if (_projects!=null && _projects.Count() > 0)
+            var project = _workspace.CurrentSolution.GetProject(documentId.ProjectId);
+            var projectInfo = _projectInfoCache.GetProjectInfo(project.Name);
+            if (projectInfo != null)
             {
-                if (await _projectInfoProvider.UpdateProjectsAsync(_projects.First(), documentId))
+                if (await _projectInfoProvider.UpdateProjectsAsync(projectInfo, documentId))
                 {
-                    SynchronizeProjectInfo(_projects);
+                    _browserConnection.Broadcast(new VSMessage(VSMessageType.Project, _projectInfoSerializer.Serialize(projectInfo)));
                 }
             }
-        }
-
-        //private async void CollectAndSynchronizeChanges()
-        //{
-        //    IEnumerable<IProjectInfo> projects = await _projectInfoProvider.GetProjectInfoAsync(false);
-        //    SynchronizeProjectInfo(projects);
-        //}
-
-        private void SynchronizeProjectInfo(IEnumerable<IProjectInfo> projects)
-        {
-            //var pageType = sessionWebs.First().PageTypes["km.tests.selenium.services.kmNewUI.Pages.EndUser.Search.SearchPageBase"];
-            // . Currently, there is only one
-            //_browserConnection.SendProject(projects.First());
-            _projects = projects;
         }
     }
 }

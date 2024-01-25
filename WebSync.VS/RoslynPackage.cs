@@ -13,6 +13,7 @@ using Task = System.Threading.Tasks.Task;
 using RoslynSpike.SessionWeb;
 using RoslynSpike.Compiler;
 using Microsoft.VisualStudio.ComponentModelHost;
+using WebSync.VS.Serializers.Mobx;
 
 namespace WebSync.VS
 {
@@ -80,9 +81,11 @@ namespace WebSync.VS
 
             var browserConnection = CreateBrowserConnection();
             _webSync = new SyncMediator(
-                workspace, 
-                browserConnection, 
+                workspace,
+                browserConnection,
                 new RoslynProjectInfoProvider(workspace),
+                new ProjectInfo.ProjectInfoCache(),
+                new MobxProjectInfoSerializer(),
                 new RoslynAssemblyProvider(workspace));
             //_selectorsConverter = new SelectorsConverter(browserConnection);
         }

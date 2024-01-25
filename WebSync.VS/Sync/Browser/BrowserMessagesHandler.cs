@@ -5,6 +5,7 @@ using RoslynSpike.SessionWeb;
 using System;
 using System.Threading.Tasks;
 using WebSync.VS.BrowserConnection.Commands;
+using WebSync.VS.ProjectInfo;
 using WebSync.VS.Serializers.Mobx;
 
 namespace WebSync.VS.Sync
@@ -15,13 +16,17 @@ namespace WebSync.VS.Sync
         private Microsoft.CodeAnalysis.Solution _solution;
         private IAssemblyProvider _assemblyProvider;
         private IProjectInfoPovider _projectInfoProvider;
+        private ProjectInfoCache _projectInfoCache;
+        private IProjectInfoSerializer _projectInfoSerializer;
 
-        public BrowserMessagesHandler(Microsoft.CodeAnalysis.Workspace workspace, IAssemblyProvider assemblyProvider, IProjectInfoPovider projectInfoProvider)
+        public BrowserMessagesHandler(Microsoft.CodeAnalysis.Workspace workspace, IAssemblyProvider assemblyProvider, IProjectInfoPovider projectInfoProvider, ProjectInfoCache projectInfoCache, IProjectInfoSerializer projectInfoSerializer)
         {
             _workspace = workspace;
             _solution = workspace.CurrentSolution;
             _assemblyProvider = assemblyProvider;
             _projectInfoProvider = projectInfoProvider;
+            _projectInfoCache = projectInfoCache;
+            _projectInfoSerializer = projectInfoSerializer;
         }
 
         public async Task<VSMessage> HandleAsync(BrowserMessage message)
@@ -41,7 +46,7 @@ namespace WebSync.VS.Sync
                 case BrowserMessageType.GetProjectNames:
                     return new GetProjectsCommand(_solution,message.Data);
                 case BrowserMessageType.GetProject:
-                    return new GetProjectCommand(_solution, _projectInfoProvider, new MobxProjectInfoSerializer(), message.Data);
+                    return new GetProjectCommand(_solution, _projectInfoProvider, _projectInfoSerializer, _projectInfoCache, message.Data);
                 case BrowserMessageType.DeleteWebsite:
                     return null;
                 case BrowserMessageType.UpdateWebsite:

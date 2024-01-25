@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Union.Interfaces;
 
 namespace Union
 {
-    internal class UnionPage
+    internal class UnionPage:IUnionPage
     {
     }
 }
