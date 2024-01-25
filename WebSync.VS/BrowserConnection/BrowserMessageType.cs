@@ -29,7 +29,7 @@ namespace RoslynSpike.BrowserConnection
         UpdateComponentType,
 
         // ComponentInstance
-        AddCompoenentInstance,
+        AddComponentInstance,
         DeleteComponentInstance,
         UpdateComponentInstance,
     }

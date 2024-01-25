@@ -58,7 +58,7 @@ namespace WebSync.VS.Sync
                     return null;
                 case BrowserMessageType.DeleteCompoenentType:
                     return null;
-                case BrowserMessageType.AddCompoenentInstance:
+                case BrowserMessageType.AddComponentInstance:
                     return new AddComponentInstanceCommand(_workspace,message.Data);
                 case BrowserMessageType.DeleteComponentInstance:
                     return new DeleteComponentInstanceCommand(_solution,message.Data);

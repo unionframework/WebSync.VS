@@ -45,18 +45,18 @@ namespace WebSync.VS.BrowserConnection.Commands
             var compilation = await project.GetCompilationAsync();
             var containerType = compilation.GetTypeByMetadataName(message.componentInstance.parentId);
 
-            var lastElementMember = GetLastElementMember(containerType);
-            var lastElementMemberSyntax = await lastElementMember.DeclaringSyntaxReferences.First().GetSyntaxAsync();
+            var typeSyntax = await containerType.DeclaringSyntaxReferences.First().GetSyntaxAsync();
+            var lastFieldSyntax = GetLastElementMember(typeSyntax);
 
             var newElementFieldSyntax = GenerateElementField(
                 message.componentInstance.fieldName, 
                 message.componentInstance.componentTypeId, 
                 message.componentInstance.initializationAttribute.constructorArguments.First().ToString());
             
-            var rootSyntax = await lastElementMemberSyntax.SyntaxTree.GetRootAsync();
-            var newRootSyntax = rootSyntax.InsertNodesAfter(lastElementMemberSyntax, new[] { newElementFieldSyntax });
+            var rootSyntax = await lastFieldSyntax.SyntaxTree.GetRootAsync();
+            var newRootSyntax = rootSyntax.InsertNodesAfter(lastFieldSyntax, new[] { newElementFieldSyntax });
 
-            var document = project.GetDocument(lastElementMemberSyntax.SyntaxTree);
+            var document = project.GetDocument(lastFieldSyntax.SyntaxTree);
             var newDocument = document.WithText(newRootSyntax.GetText());
 
             Microsoft.VisualStudio.Shell.ThreadHelper.Generic.Invoke(() =>
@@ -66,42 +66,64 @@ namespace WebSync.VS.BrowserConnection.Commands
             return null;
         }
 
-        private CompilationUnitSyntax GenerateElementField(string fieldName, string componentTypeId, string selector)
+        private FieldDeclarationSyntax GenerateElementField(string fieldName, string componentTypeId, string selector)
         {
-            return CompilationUnit()
-                .WithMembers(
-                SingletonList<MemberDeclarationSyntax>(
-                    GlobalStatement(
-                        LocalDeclarationStatement(
-                            VariableDeclaration(
-                                IdentifierName(componentTypeId))
-                            .WithVariables(
-                                SingletonSeparatedList<VariableDeclaratorSyntax>(
-                                    VariableDeclarator(
-                                        Identifier(fieldName)))))
-                        .WithAttributeLists(
-                            SingletonList<AttributeListSyntax>(
-                                AttributeList(
-                                    SingletonSeparatedList<AttributeSyntax>(
-                                        Attribute(
-                                            IdentifierName(ReflectionNames.AUTOINIT_ATTRRIBUTE))
-                                        .WithArgumentList(
-                                            AttributeArgumentList(
-                                                SingletonSeparatedList<AttributeArgumentSyntax>(
-                                                    AttributeArgument(
-                                                        LiteralExpression(
-                                                            SyntaxKind.CharacterLiteralExpression,
-                                                            Literal(selector))))))))))
-                        .WithModifiers(
-                            TokenList(
-                                Token(SyntaxKind.PublicKeyword))))))
-            .NormalizeWhitespace();
+            return FieldDeclaration(
+                    VariableDeclaration(
+                        IdentifierName(Identifier(
+                                TriviaList(),
+                                componentTypeId,
+                                TriviaList(
+                                    Space)))
+                        )
+                    .WithVariables(
+                        SingletonSeparatedList<VariableDeclaratorSyntax>(
+                            VariableDeclarator(
+                                Identifier(fieldName)))))
+                .WithAttributeLists(
+                    SingletonList<AttributeListSyntax>(
+                        AttributeList(
+                            SingletonSeparatedList<AttributeSyntax>(
+                                Attribute(
+                                    IdentifierName(ReflectionNames.AUTOINIT_ATTRRIBUTE))
+                                .WithArgumentList(
+                                    AttributeArgumentList(
+                                        SingletonSeparatedList<AttributeArgumentSyntax>(
+                                            AttributeArgument(
+                                                LiteralExpression(
+                                                    SyntaxKind.StringLiteralExpression,
+                                                    Literal(selector))))))))
+                        .WithOpenBracketToken(
+                            Token(
+                                TriviaList(
+                                    new[]{
+                                        CarriageReturnLineFeed,
+                                        Whitespace("        ")}),
+                                SyntaxKind.OpenBracketToken,
+                                TriviaList()))
+                        .WithCloseBracketToken(
+                            Token(
+                                TriviaList(),
+                                SyntaxKind.CloseBracketToken,
+                                TriviaList(
+                                    CarriageReturnLineFeed)))))
+                .WithModifiers(
+                    TokenList(
+                        Token(
+                            TriviaList(
+                                Whitespace("        ")),
+                            SyntaxKind.PublicKeyword,
+                            TriviaList(
+                                Space))))
+                .WithSemicolonToken(
+                    Token(
+                        TriviaList(),
+                        SyntaxKind.SemicolonToken,
+                        TriviaList(
+                            CarriageReturnLineFeed)));
         }
 
-        private ISymbol GetLastElementMember(INamedTypeSymbol containerType) =>
-            containerType.GetMembers()
-                .Reverse()
-                .Where(m => m.Kind == SymbolKind.Field || m.Kind == SymbolKind.Property)
-                .First();
+        private SyntaxNode GetLastElementMember(SyntaxNode typeSyntax) =>
+             typeSyntax.DescendantNodes().OfType<FieldDeclarationSyntax>().Last();
     }
 }
