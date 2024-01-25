@@ -8,6 +8,7 @@ namespace WebSync.VS.Sync
     {
         UrlMatchResponse,
         ProjectNames,
-        Project
+        Project,
+        ProjectUpdated
     }
 }

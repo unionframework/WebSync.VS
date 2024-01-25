@@ -92,7 +92,7 @@ namespace WebSync.VS
             {
                 if (await _projectInfoProvider.UpdateProjectsAsync(projectInfo, documentId))
                 {
-                    _browserConnection.Broadcast(new VSMessage(VSMessageType.Project, _projectInfoSerializer.Serialize(projectInfo)));
+                    _browserConnection.Broadcast(new VSMessage(VSMessageType.ProjectUpdated, _projectInfoSerializer.Serialize(projectInfo)));
                 }
             }
         }
