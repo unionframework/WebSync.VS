@@ -7,7 +7,8 @@ using Union.Interfaces;
 
 namespace Union
 {
-    internal class UnionPage:IUnionPage
+    internal abstract class UnionPage:IUnionPage
     {
+        public abstract string AbsolutePath { get; }
     }
 }

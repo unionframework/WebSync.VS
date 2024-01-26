@@ -55,7 +55,10 @@ namespace RoslynSpike.SessionWeb
             try
             {
                 var document = _workspace.CurrentSolution.GetDocument(changedDocumentId);
-
+                if (document==null)
+                {
+                    throw new NotImplementedException("document removed");
+                }
                 SemanticModel semanticModel = await document.GetSemanticModelAsync().ConfigureAwait(false);
                 var syntaxTree = await document.GetSyntaxTreeAsync().ConfigureAwait(false);
                 var typeDeclarationsInDocument =

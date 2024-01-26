@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Union.Attributes;
+﻿using Union.Attributes;
 
 namespace Union.Tests.Example.Services.StackOverflow
 {
@@ -16,5 +11,7 @@ namespace Union.Tests.Example.Services.StackOverflow
 
         [UnionInitAttribute(".home-page")]
         public Union.UnionElement Element1;
+
+        public override string AbsolutePath => "absoluteUrl";
     }
 }
