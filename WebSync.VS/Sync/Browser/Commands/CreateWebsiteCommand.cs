@@ -1,14 +1,13 @@
-﻿using Microsoft.CodeAnalysis;
-using RoslynSpike.BrowserConnection.WebSocket;
+﻿using RoslynSpike.BrowserConnection.WebSocket;
 using System.Threading.Tasks;
 using WebSync.VS.BrowserConnection.Commands;
 using WebSync.VS.Sync.Browser.Messages;
 
 namespace WebSync.VS.Sync
 {
-    internal class CreateWebsiteCommand : CommandWithDataBase<WebSiteMessage>
+    internal class CreateWebsiteCommand : ProjectCommandBase<WebSiteMessage>
     {
-        public CreateWebsiteCommand(Solution solution, object data) : base(solution, data)
+        public CreateWebsiteCommand(Microsoft.CodeAnalysis.Workspace workspace, object data) : base(workspace, data)
         {
         }
 

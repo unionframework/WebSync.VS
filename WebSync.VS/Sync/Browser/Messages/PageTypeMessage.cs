@@ -4,6 +4,6 @@ namespace WebSync.VS.Sync.Browser.Messages
 {
     internal class PageTypeMessage : ProjectMessage
     {
-        public ComponentTypeDto ComponentType;
+        public PageTypeDto pageType;
     }
 }

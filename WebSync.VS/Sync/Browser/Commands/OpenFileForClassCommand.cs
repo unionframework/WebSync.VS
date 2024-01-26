@@ -9,7 +9,7 @@ namespace WebSync.VS.Sync
     {
         private Microsoft.CodeAnalysis.Workspace _workspace;
 
-        public OpenFileForClassCommand(Microsoft.CodeAnalysis.Workspace workspace, object data) : base(workspace.CurrentSolution, data)
+        public OpenFileForClassCommand(Microsoft.CodeAnalysis.Workspace workspace, object data) : base(workspace, data)
         {
             _workspace = workspace;
         }

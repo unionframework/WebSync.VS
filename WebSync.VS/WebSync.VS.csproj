@@ -54,6 +54,7 @@
     <Compile Include="ProjectInfo\ProjectInfoCache.cs" />
     <Compile Include="Sync\Browser\BrowserMessagesHandler.cs" />
     <Compile Include="Sync\Browser\Commands\AddComponentInstanceCommand.cs" />
+    <Compile Include="Sync\Browser\Commands\ProjectCommandBase.cs" />
     <Compile Include="Sync\Browser\Messages\ComponentTypeMessage.cs" />
     <Compile Include="Sync\Browser\Messages\OpenFileMessage.cs" />
     <Compile Include="Sync\Browser\Messages\PageTypeMessage.cs" />

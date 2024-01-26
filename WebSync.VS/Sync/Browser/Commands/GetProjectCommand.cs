@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using RoslynSpike.BrowserConnection;
+﻿using RoslynSpike.BrowserConnection;
 using RoslynSpike.BrowserConnection.WebSocket;
 using RoslynSpike.SessionWeb;
 using RoslynSpike.SessionWeb.Models;
@@ -15,7 +14,7 @@ namespace WebSync.VS.Sync
         private IProjectInfoSerializer _serializer;
         private ProjectInfoCache _projectInfoCache;
 
-        public GetProjectCommand(Solution solution, IProjectInfoPovider projectInfoProvider, IProjectInfoSerializer serializer, ProjectInfoCache projectInfoCache, object data) : base(solution, data)
+        public GetProjectCommand(Microsoft.CodeAnalysis.Workspace workspace, IProjectInfoPovider projectInfoProvider, IProjectInfoSerializer serializer, ProjectInfoCache projectInfoCache, object data) : base(workspace, data)
         {
             _projectInfoProvider = projectInfoProvider;
             _serializer = serializer;

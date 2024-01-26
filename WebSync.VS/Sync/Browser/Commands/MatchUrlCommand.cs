@@ -5,19 +5,20 @@ using System;
 using System.Threading.Tasks;
 using WebSync.VS.BrowserConnection.Commands;
 using WebSync.VS.Sync;
+using WebSync.VS.Sync.Browser.Messages;
 
 namespace RoslynSpike.BrowserConnection.WebSocket
 {
-    internal class MatchUrlCommand : CommandWithDataBase<string>
+    internal class MatchUrlCommand : CommandWithDataBase<MatchUrlMessage>
     {
         private IAssemblyProvider _assemblyProvider;
 
-        public MatchUrlCommand(Solution solution, IAssemblyProvider assemblyProvider, object data) : base(solution, data)
+        public MatchUrlCommand(Workspace workspace, IAssemblyProvider assemblyProvider, object data) : base(workspace, data)
         {
             _assemblyProvider = assemblyProvider;
         }
 
-        public override Task<VSMessage> ExecuteAsync(string url)
+        public override Task<VSMessage> ExecuteAsync(MatchUrlMessage message)
         {
             try
             {
@@ -28,7 +29,7 @@ namespace RoslynSpike.BrowserConnection.WebSocket
                 {
                     //LogInfo($"Compiled successfully.");
                     var urlMatcher = new UrlMatcher(assemblies.Item1, assemblies.Item2);
-                    var matchUrlResult = urlMatcher.Match(url);
+                    var matchUrlResult = urlMatcher.Match(message.url);
                     return Task.FromResult(new VSMessage(VSMessageType.UrlMatchResponse, matchUrlResult));
                     //LogInfo($"Matched successfully: {matchUrlResult.ServiceId}-{matchUrlResult.PageId}");
                     //_browserConnection.SendUrlMatchResult(matchUrlResult);

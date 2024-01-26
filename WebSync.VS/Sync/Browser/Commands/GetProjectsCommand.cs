@@ -9,7 +9,7 @@ namespace WebSync.VS.Sync
 {
     internal class GetProjectsCommand : CommandBase
     {
-        public GetProjectsCommand(Solution solution, object data) : base(solution, data)
+        public GetProjectsCommand(Microsoft.CodeAnalysis.Workspace workspace, object data) : base(workspace, data)
         {
         }
 

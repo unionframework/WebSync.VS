@@ -1,10 +1,8 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
-using Newtonsoft.Json;
 using RoslynSpike.BrowserConnection.WebSocket;
 using RoslynSpike.SessionWeb;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WebSync.VS.Sync;
@@ -12,27 +10,11 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace WebSync.VS.BrowserConnection.Commands
 {
-    internal abstract class ProjectCommandBase : CommandWithDataBase<ComponentInstanceMessage>
-    {
-        protected ProjectCommandBase(Solution solution, object data) : base(solution, data)
-        {
-        }
-
-        protected Project GetProject(string name) {
-            var project = Solution.Projects.FirstOrDefault(p => p.Name == name);
-            if (project == null)
-            {
-                throw new InvalidOperationException($"Project not found: '{project.Name}'");
-            }
-            return project;
-        }
-    }
-
-    internal class AddComponentInstanceCommand : ProjectCommandBase
+    internal class AddComponentInstanceCommand : ProjectCommandBase<ComponentInstanceMessage>
     {
         private Workspace _workspace;
 
-        public AddComponentInstanceCommand(Workspace workspace, object data) : base(workspace.CurrentSolution, data)
+        public AddComponentInstanceCommand(Workspace workspace, object data) : base(workspace, data)
         {
             _workspace = workspace;
         }

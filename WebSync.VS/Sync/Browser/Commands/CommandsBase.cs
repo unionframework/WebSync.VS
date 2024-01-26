@@ -1,18 +1,21 @@
 ﻿using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
 using RoslynSpike.BrowserConnection.WebSocket;
+using System.Linq;
+using System;
 using System.Threading.Tasks;
 
 namespace WebSync.VS.BrowserConnection.Commands
 {
     internal abstract class CommandBase : ICommand
     {
-        protected Solution Solution;
+        protected Workspace Workspace;
+        protected Solution Solution => Workspace.CurrentSolution;
         protected object Data;
 
-        public CommandBase(Solution solution, object data)
+        public CommandBase(Workspace workspace, object data)
         {
-            Solution = solution;
+            Workspace = workspace;
             Data = data;
         }
 
@@ -21,7 +24,7 @@ namespace WebSync.VS.BrowserConnection.Commands
 
     internal abstract class CommandWithDataBase<TMessage> : CommandBase
     {
-        protected CommandWithDataBase(Solution solution, object data) : base(solution, data)
+        protected CommandWithDataBase(Workspace workspace, object data) : base(workspace, data)
         {
         }
 

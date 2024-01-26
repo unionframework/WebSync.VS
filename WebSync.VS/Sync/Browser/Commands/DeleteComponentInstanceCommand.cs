@@ -1,13 +1,12 @@
-﻿using Microsoft.CodeAnalysis;
-using RoslynSpike.BrowserConnection.WebSocket;
+﻿using RoslynSpike.BrowserConnection.WebSocket;
 using System.Threading.Tasks;
 using WebSync.VS.BrowserConnection.Commands;
 
 namespace WebSync.VS.Sync
 {
-    internal class DeleteComponentInstanceCommand : CommandWithDataBase<ComponentInstanceMessage>
+    internal class DeleteComponentInstanceCommand : ProjectCommandBase<ComponentInstanceMessage>
     {
-        public DeleteComponentInstanceCommand(Solution solution, object data) : base(solution, data)
+        public DeleteComponentInstanceCommand(Microsoft.CodeAnalysis.Workspace workspace, object data) : base(workspace, data)
         {
         }
 

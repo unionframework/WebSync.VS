@@ -6,4 +6,10 @@ namespace WebSync.VS.Sync.Browser.Messages
     {
         public ComponentTypeDto ComponentType;
     }
+
+    internal class MatchUrlMessage : ProjectMessage
+    {
+        public string url;
+    }
+
 }

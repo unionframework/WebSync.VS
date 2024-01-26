@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using RoslynSpike.BrowserConnection.WebSocket;
+﻿using RoslynSpike.BrowserConnection.WebSocket;
 using System.Threading.Tasks;
 using WebSync.VS.BrowserConnection.Commands;
 using WebSync.VS.Sync.Browser.Messages;
@@ -8,7 +7,7 @@ namespace WebSync.VS.Sync
 {
     internal class UpdateWebsiteCommand : CommandWithDataBase<WebSiteMessage>
     {
-        public UpdateWebsiteCommand(Solution solution, object data) : base(solution, data)
+        public UpdateWebsiteCommand(Microsoft.CodeAnalysis.Workspace workspace, object data) : base(workspace, data)
         {
         }
 

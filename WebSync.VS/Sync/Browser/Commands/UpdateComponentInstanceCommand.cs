@@ -1,11 +1,8 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.FindSymbols;
-using Newtonsoft.Json;
 using RoslynSpike.BrowserConnection.WebSocket;
 using RoslynSpike.SessionWeb;
-using RoslynSpike.SessionWeb.Models;
 using RoslynSpike.Utilities.Extensions;
 using System;
 using System.Linq;
@@ -19,7 +16,7 @@ namespace WebSync.VS.Sync
     {
         Microsoft.CodeAnalysis.Workspace _workspace;
 
-        public UpdateComponentInstanceCommand(Microsoft.CodeAnalysis.Workspace workspace, object data) : base(workspace.CurrentSolution, data)
+        public UpdateComponentInstanceCommand(Microsoft.CodeAnalysis.Workspace workspace, object data) : base(workspace, data)
         {
             _workspace = workspace;
         }
