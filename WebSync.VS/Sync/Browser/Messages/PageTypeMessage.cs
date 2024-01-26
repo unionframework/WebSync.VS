@@ -1,9 +1,10 @@
-﻿using RoslynSpike.Ember.DTO;
-
-namespace WebSync.VS.Sync.Browser.Messages
+﻿namespace WebSync.VS.Sync.Browser.Messages
 {
     internal class PageTypeMessage : ProjectMessage
     {
-        public PageTypeDto pageType;
+        public string name;
+        public string baseType;
+        public string website;
+        public string absoluteUrl;
     }
 }

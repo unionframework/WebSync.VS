@@ -21,7 +21,7 @@ namespace WebSync.VS.Sync
             var project = GetProject(message.projectName);
             var compilation = await project.GetCompilationAsync();
 
-            var pageFileName = $"{message.pageType.id}.cs";
+            var pageFileName = $"{message.name}.cs";
             Document newDocument = project.AddDocument(pageFileName, "<html></html>");
 
             //var containerType = compilation.GetTypeByMetadataName(message.componentInstance.parentId);
