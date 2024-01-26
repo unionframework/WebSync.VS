@@ -9,7 +9,7 @@ using WebSync.VS.ProjectInfo;
 
 namespace WebSync.VS.Sync
 {
-    internal class GetProjectCommand : CommandBase
+    internal class GetProjectCommand : CommandWithDataBase<ProjectMessage>
     {
         private IProjectInfoPovider _projectInfoProvider;
         private IProjectInfoSerializer _serializer;
@@ -22,7 +22,7 @@ namespace WebSync.VS.Sync
             _projectInfoCache = projectInfoCache;
         }
 
-        public async override Task<VSMessage> ExecuteAsync()
+        public async override Task<VSMessage> ExecuteAsync(ProjectMessage message)
         {
             IProjectInfo project = await _projectInfoProvider.GetProjectInfoAsync(false);
             _projectInfoCache.StoreProjectInfo(project);

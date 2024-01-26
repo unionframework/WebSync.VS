@@ -15,7 +15,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace WebSync.VS.Sync
 {
-    internal class UpdateComponentInstanceCommand : CommandBase
+    internal class UpdateComponentInstanceCommand : CommandWithDataBase<ComponentInstanceMessage>
     {
         Microsoft.CodeAnalysis.Workspace _workspace;
 
@@ -24,9 +24,8 @@ namespace WebSync.VS.Sync
             _workspace = workspace;
         }
 
-        public async override Task<VSMessage> ExecuteAsync()
+        public async override Task<VSMessage> ExecuteAsync(ComponentInstanceMessage message)
         {
-            var message = JsonConvert.DeserializeObject<ComponentInstanceMessage>(JsonConvert.SerializeObject(Data));
             var newSelector = message.componentInstance.fieldName; //message.componentInstance.initializationAttribute.constructorArguments.First().ToString();
             var project = Solution.Projects.FirstOrDefault(p => p.Name == message.projectName);
             if (project == null)

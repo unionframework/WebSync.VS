@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using WebSync.VS.Sync;
+﻿using WebSync.VS.Sync;
 
 namespace RoslynSpike.BrowserConnection.WebSocket
 {
@@ -12,16 +11,6 @@ namespace RoslynSpike.BrowserConnection.WebSocket
         {
             Type = type;
             Data = data;
-        }
-    }
-
-    internal class VSErrorMessage : VSMessage
-    {
-        private readonly string Error;
-
-        public VSErrorMessage(VSMessageType type, string error) : base(type, null)
-        {
-            Error = error;
         }
     }
 }

@@ -1,24 +1,11 @@
-﻿using Microsoft.CodeAnalysis;
-using Newtonsoft.Json;
-using RoslynSpike.BrowserConnection.WebSocket;
-using System;
+﻿using RoslynSpike.BrowserConnection.WebSocket;
 using System.Linq;
 using System.Threading.Tasks;
 using WebSync.VS.BrowserConnection.Commands;
 
 namespace WebSync.VS.Sync
 {
-    public class ProjectMessage
-    {
-        public string projectName;
-    }
-
-    public class OpenFileMessage:ProjectMessage
-    {
-        public string fullClassName;
-    }
-
-    internal class OpenFileForClassCommand : CommandBase
+    internal class OpenFileForClassCommand : CommandWithDataBase<OpenFileMessage>
     {
         private Microsoft.CodeAnalysis.Workspace _workspace;
 
@@ -27,15 +14,14 @@ namespace WebSync.VS.Sync
             _workspace = workspace;
         }
 
-        public override Task<VSMessage> ExecuteAsync()
+        public override Task<VSMessage> ExecuteAsync(OpenFileMessage message)
         {
-            OpenFileMessage openFileMessage = JsonConvert.DeserializeObject<OpenFileMessage>(JsonConvert.SerializeObject(Data));
             Microsoft.VisualStudio.Shell.ThreadHelper.Generic.Invoke(() =>
             {
                 foreach (var project in _workspace.CurrentSolution.Projects)
                 {
                     var typeByMetadataName =
-                        project.GetCompilationAsync().Result.GetTypeByMetadataName(openFileMessage.fullClassName);
+                        project.GetCompilationAsync().Result.GetTypeByMetadataName(message.fullClassName);
                     if (typeByMetadataName != null)
                     {
                         var location = typeByMetadataName.Locations.First();

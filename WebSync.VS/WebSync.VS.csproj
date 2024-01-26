@@ -54,8 +54,13 @@
     <Compile Include="ProjectInfo\ProjectInfoCache.cs" />
     <Compile Include="Sync\Browser\BrowserMessagesHandler.cs" />
     <Compile Include="Sync\Browser\Commands\AddComponentInstanceCommand.cs" />
-    <Compile Include="Sync\Browser\Commands\ComponentInstanceMessage.cs" />
-    <Compile Include="Sync\Browser\Commands\StandardCommandResult.cs" />
+    <Compile Include="Sync\Browser\Messages\ComponentTypeMessage.cs" />
+    <Compile Include="Sync\Browser\Messages\OpenFileMessage.cs" />
+    <Compile Include="Sync\Browser\Messages\PageTypeMessage.cs" />
+    <Compile Include="Sync\Browser\Messages\ProjectMessage.cs" />
+    <Compile Include="Sync\Browser\Messages\ComponentInstanceMessage.cs" />
+    <Compile Include="Sync\VSErrorMessage.cs" />
+    <Compile Include="Sync\VSMessage.cs" />
     <Compile Include="Sync\Browser\Commands\CommandsBase.cs" />
     <Compile Include="Sync\Browser\Commands\ICommand.cs" />
     <Compile Include="Sync\Browser\Commands\MatchUrlCommand.cs" />
@@ -120,6 +125,7 @@
     <Compile Include="Sync\Browser\Commands\OpenFileForClassCommand.cs" />
     <Compile Include="Sync\Browser\Commands\UpdateComponentInstanceCommand.cs" />
     <Compile Include="Sync\Browser\Commands\UpdateWebsiteCommand.cs" />
+    <Compile Include="Sync\Browser\Messages\WebSiteMessage.cs" />
     <Compile Include="Sync\VSMessageType.cs" />
     <Compile Include="Sync\SyncMediator.cs" />
     <Compile Include="Sync\Workspace\WorkspaceUpdatesHandler.cs" />
@@ -183,9 +189,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Sync\Browser\Messages\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

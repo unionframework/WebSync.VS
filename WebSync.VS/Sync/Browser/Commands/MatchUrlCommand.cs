@@ -8,7 +8,7 @@ using WebSync.VS.Sync;
 
 namespace RoslynSpike.BrowserConnection.WebSocket
 {
-    internal class MatchUrlCommand : CommandBase
+    internal class MatchUrlCommand : CommandWithDataBase<string>
     {
         private IAssemblyProvider _assemblyProvider;
 
@@ -17,11 +17,10 @@ namespace RoslynSpike.BrowserConnection.WebSocket
             _assemblyProvider = assemblyProvider;
         }
 
-        public override Task<VSMessage> ExecuteAsync()
+        public override Task<VSMessage> ExecuteAsync(string url)
         {
             try
             {
-                var url = Data as string;
                 //LogInfo($"MatchUrl: {url}");
                 //_log.Info($"MatchUrl: {url}");
                 var assemblies = _assemblyProvider.GetAssemblies();
