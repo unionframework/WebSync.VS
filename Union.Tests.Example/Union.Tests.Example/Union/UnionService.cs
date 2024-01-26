@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Union
 {
-    internal class UnionService
+    internal abstract class UnionService<T>
     {
+        public abstract string BaseUrl { get; }
     }
 }

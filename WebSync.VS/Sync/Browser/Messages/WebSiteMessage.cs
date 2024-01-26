@@ -1,15 +1,8 @@
-﻿using RoslynSpike.Ember.DTO;
-
-namespace WebSync.VS.Sync.Browser.Messages
+﻿namespace WebSync.VS.Sync.Browser.Messages
 {
     internal class WebSiteMessage : ProjectMessage
     {
-        public ComponentTypeDto ComponentType;
+        public string name;
+        public string baseUrl;
     }
-
-    internal class MatchUrlMessage : ProjectMessage
-    {
-        public string url;
-    }
-
 }

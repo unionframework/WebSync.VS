@@ -1,4 +1,5 @@
-﻿using RoslynSpike.BrowserConnection.WebSocket;
+﻿using Microsoft.CodeAnalysis;
+using RoslynSpike.BrowserConnection.WebSocket;
 using System.Threading.Tasks;
 using WebSync.VS.BrowserConnection.Commands;
 using WebSync.VS.Sync.Browser.Messages;
@@ -13,7 +14,20 @@ namespace WebSync.VS.Sync
 
         public override Task<VSMessage> ExecuteAsync(WebSiteMessage message)
         {
-            throw new System.NotImplementedException();
+            var project = GetProject(message.projectName);
+
+            var basePageName = $"{message.name}Page";
+            var basePageFileName = $"{basePageName}.cs";
+            var webSiteFileName = $"{message.name}.cs";
+
+            var webSiteSyntax = UnionSyntaxFactory.GenerateWebSite(message.name, basePageName, message.baseUrl);
+            var basePageSyntax = UnionSyntaxFactory.GenerateBasePage(basePageName);
+
+            Document newDocument = project.AddDocument(webSiteFileName, webSiteSyntax);
+            newDocument = newDocument.Project.AddDocument(basePageFileName, basePageSyntax);
+
+            ApplyChanges(newDocument.Project.Solution);
+            return Task.FromResult(null as VSMessage);
         }
     }
 }

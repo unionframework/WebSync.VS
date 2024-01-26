@@ -19,5 +19,13 @@ namespace WebSync.VS.BrowserConnection.Commands
             }
             return project;
         }
+
+        protected void ApplyChanges(Solution solution)
+        {
+            Microsoft.VisualStudio.Shell.ThreadHelper.Generic.Invoke(() =>
+            {
+                var updated = Workspace.TryApplyChanges(solution);
+            });
+        }
     }
 }

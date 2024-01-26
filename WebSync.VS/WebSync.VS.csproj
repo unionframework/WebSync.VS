@@ -56,10 +56,12 @@
     <Compile Include="Sync\Browser\Commands\AddComponentInstanceCommand.cs" />
     <Compile Include="Sync\Browser\Commands\ProjectCommandBase.cs" />
     <Compile Include="Sync\Browser\Messages\ComponentTypeMessage.cs" />
+    <Compile Include="Sync\Browser\Messages\MatchUrlMessage.cs" />
     <Compile Include="Sync\Browser\Messages\OpenFileMessage.cs" />
     <Compile Include="Sync\Browser\Messages\PageTypeMessage.cs" />
     <Compile Include="Sync\Browser\Messages\ProjectMessage.cs" />
     <Compile Include="Sync\Browser\Messages\ComponentInstanceMessage.cs" />
+    <Compile Include="Sync\UnionSyntaxFactory.cs" />
     <Compile Include="Sync\VSErrorMessage.cs" />
     <Compile Include="Sync\VSMessage.cs" />
     <Compile Include="Sync\Browser\Commands\CommandsBase.cs" />
