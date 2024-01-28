@@ -1,12 +1,12 @@
 ﻿using Microsoft.CodeAnalysis;
 using System;
 using System.Linq;
-using WebSync.VS.Sync;
 
 namespace WebSync.VS.BrowserConnection.Commands
 {
     internal abstract class ProjectCommandBase<TMessage> : CommandWithDataBase<TMessage>
     {
+
         protected ProjectCommandBase(Workspace workspace, object data) : base(workspace, data)
         {
         }

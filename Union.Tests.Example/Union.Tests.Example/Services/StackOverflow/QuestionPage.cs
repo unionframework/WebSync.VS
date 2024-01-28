@@ -6,6 +6,7 @@ namespace Union.Tests.Example.Services.StackOverflow
     {
         [UnionInit("Tlkkkkk")]
         public UnionElement Title;
+
         [UnionInit(".question-body")]
         public UnionElement Body;
 

@@ -49,7 +49,7 @@ namespace WebSync.VS.Sync
                 case BrowserMessageType.UpdateWebsite:
                     return new UpdateWebsiteCommand(_workspace, message.Data);
                 case BrowserMessageType.CreateWebsite:
-                    return new CreateWebsiteCommand(_workspace, message.Data);
+                    return new CreateWebsiteCommand(_workspace, message.Data, message.AsyncId);
                 case BrowserMessageType.CreatePageType:
                     return new CreatePageTypeCommand(_workspace, message.Data);
                 case BrowserMessageType.CreateComponentType:

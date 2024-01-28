@@ -7,6 +7,7 @@ namespace WebSync.VS.Sync
     public enum VSMessageType
     {
         UrlMatchResponse,
+        CreateWebsiteResponse,
         ProjectNames,
         Project,
         ProjectUpdated

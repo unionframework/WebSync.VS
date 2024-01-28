@@ -8,15 +8,17 @@ namespace WebSync.VS.Sync
 {
     internal class CreateWebsiteCommand : ProjectCommandBase<WebSiteMessage>
     {
-        public CreateWebsiteCommand(Microsoft.CodeAnalysis.Workspace workspace, object data) : base(workspace, data)
+        public string AsyncId;
+        public CreateWebsiteCommand(Microsoft.CodeAnalysis.Workspace workspace, object data, string asyncId) : base(workspace, data)
         {
+            AsyncId = asyncId;
         }
 
         public override Task<VSMessage> ExecuteAsync(WebSiteMessage message)
         {
             var project = GetProject(message.projectName);
 
-            var basePageName = $"{message.name}Page";
+            var basePageName = $"{message.name}PageBase";
             var basePageFileName = $"{basePageName}.cs";
             var webSiteFileName = $"{message.name}.cs";
 
@@ -27,7 +29,7 @@ namespace WebSync.VS.Sync
             newDocument = newDocument.Project.AddDocument(basePageFileName, basePageSyntax);
 
             ApplyChanges(newDocument.Project.Solution);
-            return Task.FromResult(null as VSMessage);
+            return Task.FromResult(new VSMessage(VSMessageType.CreateWebsiteResponse, null, AsyncId));
         }
     }
 }

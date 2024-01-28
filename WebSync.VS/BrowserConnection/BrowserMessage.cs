@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using NLog;
 
@@ -9,14 +8,16 @@ namespace RoslynSpike.BrowserConnection
     {
         private static Logger _log = LogManager.GetCurrentClassLogger();
 
-        public BrowserMessage(BrowserMessageType type, object data)
+        public BrowserMessage(BrowserMessageType type, object data, string asyncId)
         {
             Type = type;
             Data = data;
+            AsyncId = asyncId;
         }
 
         public BrowserMessageType Type { get; }
         public object Data { get; }
+        public string AsyncId { get; }
 
         public string Serialize()
         {
